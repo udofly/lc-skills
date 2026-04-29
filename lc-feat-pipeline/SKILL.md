@@ -1,6 +1,6 @@
 ---
 name: lc-feat-pipeline
-description: 功能开发总控技能。串联需求分析→设计→设计审核→编码→Lint→测试→QA→CR的完整流水线，支持从任意步骤开始和断点恢复。当用户说"开始流水线"、"完整开发"、"走流程"、"pipeline"时触发。
+description: 功能开发总控技能。串联需求分析→设计→设计审核→编码→Lint→测试→QA的完整流水线（不含CR/PR），支持从任意步骤开始和断点恢复。CR/PR请单独使用 /lc-feat:pr。当用户说"开始流水线"、"完整开发"、"走流程"、"pipeline"时触发。
 license: MIT
 metadata:
   author: kejinshou-team
@@ -12,23 +12,35 @@ metadata:
 串联完整的功能开发流程，每步完成后等待确认再进入下一步。
 **流水线不执行任何 git 操作（commit/push/PR），仅做分析和代码生成。**
 
+**每步暂停时的交互格式**：
+```
+是否继续 Step N（步骤名）？
+  y — 继续
+  s — 跳过此步骤
+```
+- 用户输入 `y` 或 `Y`：执行当前步骤
+- 用户输入 `s` 或 `S` 或 `skip` 或 `跳过`：跳过当前步骤，标记为 `skipped`，进入下一步
+
 ---
 
-**Input**: `/lc-feat:pipeline <feat-name> [--from=<step>] [--mode=full|lite]`
+**Input**: `/lc-feat:pipeline <feat-name> [--from=<step>] [--mode=full|lite] [--auto]`
 
 参数说明：
 - `feat-name`: 功能名称（kebab-case）
 - `--from=<step>`: 从指定步骤开始（可选，自动断点恢复时不需要）
 - `--mode=full|lite`: 流水线模式（可选，默认根据需求类型自动选择）
+- `--auto`: 全自动模式，跳过所有中间确认，一口气跑完全部步骤。适合自己用的小功能快速开发
 
-可用步骤：`requirement` → `design` → `design-review` → `implement` → `lint` → `test` → `qa` → `cr`
+可用步骤：`requirement` → `design` → `design-review` → `implement` → `lint` → `test` → `qa`
+
+> **CR/PR 不在流水线中执行**，请在流水线完成后单独使用 `/lc-feat:pr` 进行 Code Review 和 PR 创建。
 
 **流水线模式**
 
 | 模式 | 适用场景 | 执行步骤 |
 |------|---------|---------|
-| **full** | 新功能（需要新页面/新路由） | 全部 8 步 |
-| **lite** | 功能扩展/Bug修复/小改动 | requirement → implement → lint → test → cr（5 步）|
+| **full** | 新功能（需要新页面/新路由） | 全部 7 步（requirement → design → design-review → implement → lint → test → qa） |
+| **lite** | 功能扩展/Bug修复/小改动 | requirement → implement → lint → test（4 步）|
 
 **Steps**
 
@@ -70,7 +82,6 @@ metadata:
      lint: { status: pending, file: lint-report.md, depends: [implement] }
      test: { status: pending, file: test-report.md, depends: [implement] }
      qa: { status: pending, file: qa-report.md, depends: [implement] }
-     cr: { status: pending, file: "", depends: [lint] }
    decisions: []
    ```
 
@@ -103,7 +114,6 @@ metadata:
    | lint | implement 步骤改动的文件列表（从 design.md 或 git diff 获取） |
    | test | requirement.md 的用户故事 + implement 改动的文件列表 |
    | qa | requirement.md + design.md + implement 改动文件列表 |
-   | cr | 全部已完成步骤的产出摘要 |
 
    > 注意：只加载必要的片段，不全文读取大文件，控制 token 消耗。
 
@@ -138,14 +148,14 @@ metadata:
    - 执行 `/lc-feat:requirement` 逻辑
    - 产出：`requirement.md`
    - 根据需求类型建议 full 或 lite 模式，记录到 `progress.yaml.mode`
-   - **暂停等待用户确认**
+   - **暂停**：`是否继续 Step 2（技术设计）？ y — 继续 / s — 跳过`
 
    ### Step 2: 技术设计（lite 模式跳过，标记 skipped）
    - **前置检查**：`requirement.md` 必须存在
    - **Preamble**：加载 requirement.md 摘要 + 相关 memory
    - 执行 `/lc-feat:design` 逻辑
    - 产出：`design.md`
-   - **暂停等待用户确认**
+   - **暂停**：`是否继续 Step 3（设计审核）？ y — 继续 / s — 跳过`
 
    ### Step 3: 设计审核（lite 模式跳过，标记 skipped）
    - **前置检查**：`design.md` 必须存在
@@ -154,7 +164,7 @@ metadata:
    - 产出：`design-review.md` + 修订后的 `design.md`
    - **质量门控**：如果审核发现 P1 级严重问题，使用 **AskUserQuestion** 提示：
      > "设计审核发现 {N} 个严重问题（已自动修订）。请确认修订后的设计文档是否满意，或需要进一步调整后再进入编码阶段。"
-   - **暂停等待用户确认**
+   - **暂停**：`是否继续 Step 4（编码实现）？ y — 继续 / s — 跳过`
 
    ### Step 4: 编码实现
    - **前置检查**：
@@ -168,7 +178,7 @@ metadata:
      4. 如果 CLAUDE.md 未指定编码规范 skill，则读取项目中相似模块的代码作为参考
    - 执行 `/lc-feat:implement` 逻辑
    - 产出：源代码文件
-   - **暂停等待用户确认**
+   - **暂停**：`是否继续 Step 5（代码检查）？ y — 继续 / s — 跳过`
 
    ### Step 5: 代码检查
    - **前置检查**：implement 步骤必须为 done
@@ -179,6 +189,7 @@ metadata:
      - 新增代码 0 error → 自动通过，继续下一步
      - 新增代码有 error → 尝试 `--fix` 自动修复，修复后仍有 error 则**暂停**：
        > "Lint 检查发现 {N} 个无法自动修复的错误，建议手动修复后再继续。"
+   - **暂停**：`是否继续 Step 6（自动化测试）？ y — 继续 / s — 跳过`
 
    ### Step 6: 自动化测试（full + lite 均执行）
    - **前置检查**：implement 步骤必须为 done + 检测 vitest 是否可用
@@ -190,19 +201,15 @@ metadata:
      - 有失败（3 轮修复后仍失败）→ **暂停**：
        > "测试发现 {N} 个失败用例，可能是源代码 bug，请检查后继续。"
    - 如果项目未配置 vitest/jest → 跳过并标记 skipped，记录 decision
+   - **暂停**：`是否继续 Step 7（QA 分析）？ y — 继续 / s — 跳过`
 
    ### Step 7: QA 分析（lite 模式跳过，标记 skipped）
    - **Preamble**：加载 requirement.md + design.md 摘要 + 改动文件列表
    - 执行 `/lc-feat:qa` 逻辑
    - 产出：`qa-report.md`
-   - **暂停等待用户确认**
-
-   ### Step 8: Code Review（仅分析，不执行 git 操作）
-   - **Preamble**：加载全部已完成步骤的产出摘要
-   - 执行 `/lc-feat:pr` 的 CR 阶段逻辑
-   - 产出：CR 分析报告（输出到对话）
-   - 建议 commit message
    - **流水线结束**
+   - 输出总结：改动文件列表 + 建议 commit message
+   - 提示用户：如需 Code Review 和 PR 创建，请单独使用 `/lc-feat:pr`
 
 4. **自动断点恢复**
 
@@ -257,7 +264,7 @@ metadata:
 
 6. **流水线结束后写入 Memory**
 
-   当流水线全部完成（cr.status = done）时，自动将以下信息写入 Claude Memory：
+   当流水线全部完成（qa.status = done，或 lite 模式最后一步完成）时，自动将以下信息写入 Claude Memory：
    - **project 类型**：功能名称、涉及模块、完成日期
    - **feedback 类型**：流水线中用户的关键反馈和偏好
    - 不写入临时性信息（具体代码细节、文件路径等）
@@ -267,12 +274,25 @@ metadata:
 **Guardrails**
 - **流水线全程不执行任何 git 操作**（不 add、不 commit、不 push、不创建 PR）
 - git 操作由用户自行决定和执行
-- 每步完成必须暂停等待确认（lint 自动通过时除外）
+- 每步完成必须暂停等待确认（lint 自动通过时除外），提示格式统一为 `y — 继续 / s — 跳过`
 - **progress.yaml 必须在每步前后更新**，保证断点恢复的准确性
 - **Preamble 必须在每步执行前运行**，不能跳过
 - Preamble 加载 Memory 最多 3 条，避免上下文过载
 - Preamble 加载前序产出只取摘要片段，不全文读取
 - 用户随时可以说"跳过"或"回退到{步骤}"
-- lite 模式适用于小改动，避免为 10 行代码跑完 8 步
+- lite 模式适用于小改动，避免为 10 行代码跑完 7 步
 - 跳过的步骤标记为 `skipped` 而非 `done`
+
+**`--auto` 全自动模式规则**
+
+当传入 `--auto` 参数时，流水线进入全自动模式：
+
+- **不暂停、不等待确认**，所有步骤连续执行，中间不询问用户
+- **默认走完整流程（full 模式）**，除非用户显式指定 `--mode=lite`
+- 质量门控自动决策：lint error 自动 `--fix`；测试失败自动修复最多 2 轮，仍失败则标记 skipped 继续
+- 设计审核发现的问题自动修订，不暂停
+- 仍然生成产出文档（requirement.md / design.md 等），确保可追溯和断点恢复
+- 仍然更新 `progress.yaml`，确保可追溯
+- 流水线结束后输出一份简要总结（改动文件列表 + 建议 commit message）
+- 触发方式：`/lc-feat:pipeline --auto <需求描述>` 或用户说"全自动"、"自动跑"、"不用确认"
 - 前置检查失败时不直接报错，而是提示并建议补充执行
