@@ -16,7 +16,7 @@
 | lc-feat-lint | 0.0.2 | 2026-05-25 |
 | lc-feat-test | 0.0.3 | 2026-05-25 |
 | lc-feat-e2e | 0.0.3 | 2026-05-25 |
-| lc-feat-qa | 0.0.2 | 2026-05-25 |
+| lc-feat-qa | 0.0.3 | 2026-05-25 |
 | lc-feat-pr | 0.0.2 | 2026-05-25 |
 | lc-feat-document-release | 0.0.4 | 2026-05-25 |
 | lc-feat-api-sync | 0.0.2 | 2026-05-25 |
@@ -24,6 +24,15 @@
 ---
 
 ## 更新记录
+
+### 2026-05-25 — qa v0.0.3
+
+**lc-feat-qa** 新增第 6 维度「变更影响分析」：
+
+- 参考 `lc-branch-impact-analysis` 和 `lc-commit-impact-analysis` 的分析手法
+- 新增 4.6 变更影响分析（回归安全性）：Bug 模式检测（8 patterns）、删除/重命名 grep 验证、行为变更检测、配置影响评估
+- QA 报告模板增加「变更影响分析」section 和评分维度（5 → 6）
+- pipeline-guide 同步更新为六维度评审
 
 ### 2026-05-25 — e2e v0.0.3
 

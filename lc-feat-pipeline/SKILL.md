@@ -323,3 +323,188 @@ metadata:
 - 流水线结束后输出一份简要总结（改动文件列表 + 建议 commit message）
 - 触发方式：`/lc-feat:pipeline --auto <需求描述>` 或用户说"全自动"、"自动跑"、"不用确认"
 - 前置检查失败时不直接报错，而是提示并建议补充执行
+
+---
+
+## 使用示例
+
+### 示例 1：在功能分支上启动完整流水线
+
+```bash
+# 当前在 feature/3.38-coupon 分支
+用户：/lc-feat:pipeline
+```
+
+AI 自动从分支名提取 `feat-name = 3.38-coupon`，创建 `docs/pipeline/3.38-coupon/`，初始化 `progress.yaml`，进入 Step 1 需求分析。
+
+```
+AI：流水线已初始化：3.38-coupon（检测为新功能，建议 full 模式）
+    📁 docs/pipeline/3.38-coupon/progress.yaml 已创建
+
+    是否继续 Step 1（需求分析）？
+      y — 继续
+      s — 跳过
+```
+
+```bash
+用户：y
+AI：请描述你想要实现的功能（文字、截图路径或文档链接均可）。
+用户：后台新增优惠券管理，列表页 + 新增/编辑弹窗 + 停用/启用 + 领取记录子页面。截图 /tmp/coupon.png
+```
+
+AI 生成 `requirement.md`，暂停等待确认，之后每步输入 `y` 即可推进。
+
+---
+
+### 示例 2：显式指定 feat-name + lite 模式
+
+```bash
+用户：/lc-feat:pipeline fix-price-display --mode=lite
+```
+
+```
+AI：流水线已初始化：fix-price-display（lite 模式，4 步）
+    执行步骤：requirement → implement → lint → test
+    跳过步骤：design / design-review / e2e / qa
+
+    是否继续 Step 1（需求分析）？
+      y — 继续
+      s — 跳过
+```
+
+---
+
+### 示例 3：断点恢复（自动检测）
+
+上次在 implement 步骤中断，重新进入流水线：
+
+```bash
+用户：/lc-feat:pipeline
+```
+
+```
+AI：检测到已有进度，自动恢复：3.38-coupon（full 模式）
+    ✅ requirement — done
+    ✅ design — done
+    ✅ design-review — done
+    🔄 implement — 待执行 ← 从此继续
+    ⏳ lint — pending
+    ⏳ test — pending
+    ⏳ e2e — pending
+    ⏳ qa — pending
+
+    历史决策：
+    - [requirement] 发放渠道字段后续迭代再加
+    - [design] 选择方案A：复用现有 FormDialog 组件
+
+    是否继续 Step 4（编码实现）？
+      y — 继续
+      s — 跳过
+```
+
+---
+
+### 示例 4：从指定步骤开始
+
+```bash
+用户：/lc-feat:pipeline 3.38-coupon --from=lint
+```
+
+```
+AI：流水线从 lint 步骤开始：3.38-coupon
+    ⏭️ requirement — 跳过
+    ⏭️ design — 跳过
+    ⏭️ design-review — 跳过
+    ⏭️ implement — 跳过
+    🔄 lint — 从此开始
+    ⏳ test — pending
+    ⏳ e2e — pending
+    ⏳ qa — pending
+
+    是否继续 Step 5（代码检查）？
+      y — 继续
+      s — 跳过
+```
+
+---
+
+### 示例 5：全自动模式
+
+```bash
+用户：/lc-feat:pipeline --auto 新增商品标签筛选功能，在搜索页添加标签多选组件
+```
+
+AI 不暂停、不等待确认，连续执行 8 步。结束后输出总结：
+
+```
+AI：🏁 流水线全自动完成：商品标签筛选
+
+    📊 执行结果：
+    ✅ requirement — done（8 个功能点）
+    ✅ design — done（3 个文件改动）
+    ✅ design-review — done（1 个问题已自动修订）
+    ✅ implement — done（新增 TagFilter.vue，修改 GoodsSearch.vue）
+    ✅ lint — done（2 个 warning 已自动修复）
+    ✅ test — done（5/5 用例通过）
+    ⏭️ e2e — skipped（dev server 未启动）
+    ✅ qa — done（8.2/10）
+
+    📁 改动文件：
+    - src/views/goods/components/TagFilter.vue（新增）
+    - src/views/goods/GoodsSearch.vue（修改）
+    - src/request/MwpGoods.ts（修改，新增 getTagList 接口）
+
+    💡 建议 commit message：
+    feat(goods): 添加商品标签筛选功能
+
+    如需 Code Review 和 PR 创建，请使用 /lc-feat:pr
+```
+
+---
+
+### 示例 6：H5 移动端项目（kejinshou_m）
+
+```bash
+# 当前在 feature/3.37-bargain 分支，kejinshou_m 项目
+用户：/lc-feat:pipeline
+```
+
+与后台项目流程一致，区别在于 Step 4 编码时：
+- 自动调用 `lc-kejinshou-h5-vue` 编码规范 skill（而非 backend-page）
+- 使用 Vant 4 + XPopup/XNavBar 组件（而非 KrCard/KrTable）
+- 请求层使用 `MwpXxx.ts` + `mwpRequest` 模式
+- 路由使用 `routerKey.ts` + `routerName` 点分命名
+
+---
+
+### 示例 7：中途跳过步骤
+
+```bash
+AI：是否继续 Step 7（E2E 测试）？
+      y — 继续
+      s — 跳过
+
+用户：s
+```
+
+```
+AI：Step 7（E2E 测试）已跳过，标记为 skipped。
+    是否继续 Step 8（QA 分析）？
+      y — 继续
+      s — 跳过
+```
+
+---
+
+### 交互速查
+
+| 场景 | 命令 |
+|------|------|
+| 新功能完整流水线 | `/lc-feat:pipeline` |
+| 小改动精简流程 | `/lc-feat:pipeline --mode=lite` |
+| 全自动不确认 | `/lc-feat:pipeline --auto <描述>` |
+| 从指定步骤开始 | `/lc-feat:pipeline --from=implement` |
+| 断点恢复 | `/lc-feat:pipeline`（自动检测） |
+| 单独跑 PR | `/lc-feat:pr` |
+| 发布后收尾 | `/lc-feat:document-release` |
+| 接口同步 | `/lc-feat:api-sync` |
