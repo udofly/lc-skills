@@ -1,10 +1,11 @@
 ---
 name: lc-feat-pipeline
-description: 功能开发总控技能。串联需求分析→设计→设计审核→编码→Lint→测试→QA的完整流水线（不含CR/PR），支持从任意步骤开始和断点恢复。CR/PR请单独使用 /lc-feat:pr。当用户说"开始流水线"、"完整开发"、"走流程"、"pipeline"时触发。
+description: 功能开发总控技能。串联需求分析→设计→设计审核→编码→Lint→测试→E2E→QA的完整流水线（不含CR/PR），支持从任意步骤开始和断点恢复。CR/PR请单独使用 /lc-feat:pr。当用户说"开始流水线"、"完整开发"、"走流程"、"pipeline"时触发。
 license: MIT
 metadata:
   author: kejinshou-team
-  version: "0.0.2"
+  version: "0.0.3"
+  guide: "~/.claude/skills/docs/lc-feat-pipeline-guide.md"
 ---
 
 # 功能开发流水线（总控）
@@ -31,7 +32,7 @@ metadata:
 - `--mode=full|lite`: 流水线模式（可选，默认根据需求类型自动选择）
 - `--auto`: 全自动模式，跳过所有中间确认，一口气跑完全部步骤。适合自己用的小功能快速开发
 
-可用步骤：`requirement` → `design` → `design-review` → `implement` → `lint` → `test` → `qa`
+可用步骤：`requirement` → `design` → `design-review` → `implement` → `lint` → `test` → `e2e` → `qa`
 
 > **CR/PR 不在流水线中执行**，请在流水线完成后单独使用 `/lc-feat:pr` 进行 Code Review 和 PR 创建。
 
@@ -39,8 +40,8 @@ metadata:
 
 | 模式 | 适用场景 | 执行步骤 |
 |------|---------|---------|
-| **full** | 新功能（需要新页面/新路由） | 全部 7 步（requirement → design → design-review → implement → lint → test → qa） |
-| **lite** | 功能扩展/Bug修复/小改动 | requirement → implement → lint → test（4 步）|
+| **full** | 新功能（需要新页面/新路由） | 全部 8 步（requirement → design → design-review → implement → lint → test → e2e → qa） |
+| **lite** | 功能扩展/Bug修复/小改动 | requirement → implement → lint → test（4 步，e2e/qa 跳过）|
 
 **Steps**
 
@@ -81,6 +82,7 @@ metadata:
      implement: { status: pending, file: "", depends: [design-review] }
      lint: { status: pending, file: lint-report.md, depends: [implement] }
      test: { status: pending, file: test-report.md, depends: [implement] }
+     e2e: { status: pending, file: e2e-report.md, depends: [implement] }
      qa: { status: pending, file: qa-report.md, depends: [implement] }
    decisions: []
    ```
@@ -113,6 +115,7 @@ metadata:
    | implement | design.md 的"改动文件清单"和"组件设计"部分 |
    | lint | implement 步骤改动的文件列表（从 design.md 或 git diff 获取） |
    | test | requirement.md 的用户故事 + implement 改动的文件列表 |
+   | e2e | requirement.md 的用户操作流程 + design.md 的路由和页面结构 + implement 改动文件列表 |
    | qa | requirement.md + design.md + implement 改动文件列表 |
 
    > 注意：只加载必要的片段，不全文读取大文件，控制 token 消耗。
@@ -171,11 +174,20 @@ metadata:
      - full 模式：`design.md` 必须存在（或 `design-review.md` 存在表示已审核）
      - lite 模式：`requirement.md` 必须存在
    - **Preamble**：加载 design.md 的改动文件清单和组件设计 + decisions + 相关 memory
-   - **必须先加载项目编码规范 skill**：
-     1. 读取项目 `CLAUDE.md`，查找其中提到的编码规范 skill 名称（如 `lc-kejinshou-backend-page`、`lc-kejinshou-h5-vue`、`lc-kejinshou-h5-nuxt`）
-     2. 如果该 skill 在当前可用 skill 列表中存在，**使用 Skill tool 加载该 skill**，获取完整编码规范
-     3. 编码时**严格遵循该 skill 定义的所有规范**（组件库、命名、Toast、Service 格式、取值方式等），规范优先级高于 implement skill 中的通用规范
-     4. 如果 CLAUDE.md 未指定编码规范 skill，则读取项目中相似模块的代码作为参考
+   - **【强制·阻断性前置条件】必须先通过 Skill tool 调用项目编码规范 skill（不可跳过、不可凭记忆替代）**：
+
+     > **⛔ 阻断规则：在 Skill tool 调用返回结果之前，禁止编写任何业务代码（包括 Service、页面、路由、权限）。违反此规则等同于步骤未执行。**
+
+     1. 读取项目 `CLAUDE.md`，查找其中提到的编码规范 skill 名称
+     2. **项目→skill 映射表（硬性约束）**：
+        | 项目类型 | 必须使用的 skill |
+        |---------|-----------------|
+        | h5-vue 项目（如 kejinshou_m） | `lc-kejinshou-h5-vue` |
+        | h5-nuxt 项目 | `lc-kejinshou-h5-nuxt` |
+        | backend 后台项目（如 backend-kejinshou） | `lc-kejinshou-backend-page` |
+     3. **必须使用 Skill tool 实际调用对应的项目 skill**，获取完整编码规范。**"已知规范内容"不能替代实际调用——必须产生一次 Skill tool call。**
+     4. 编码时**严格遵循该 skill 定义的所有规范**（组件库、命名、Toast、Service 格式、取值方式等），规范优先级高于 implement skill 中的通用规范
+     5. 如果 CLAUDE.md 未指定编码规范 skill，则根据项目目录结构自动匹配上述映射表中的 skill 并加载
    - 执行 `/lc-feat:implement` 逻辑
    - 产出：源代码文件
    - **暂停**：`是否继续 Step 5（代码检查）？ y — 继续 / s — 跳过`
@@ -201,9 +213,21 @@ metadata:
      - 有失败（3 轮修复后仍失败）→ **暂停**：
        > "测试发现 {N} 个失败用例，可能是源代码 bug，请检查后继续。"
    - 如果项目未配置 vitest/jest → 跳过并标记 skipped，记录 decision
-   - **暂停**：`是否继续 Step 7（QA 分析）？ y — 继续 / s — 跳过`
+   - **暂停**：`是否继续 Step 7（E2E 测试）？ y — 继续 / s — 跳过`
 
-   ### Step 7: QA 分析（lite 模式跳过，标记 skipped）
+   ### Step 7: E2E 端到端测试（full 模式执行，lite 模式跳过）
+   - **前置检查**：implement 步骤必须为 done + 检测 Playwright 是否可用 + dev server 是否运行
+   - **Preamble**：加载 requirement.md 的用户操作流程 + design.md 的路由和页面结构 + 改动文件列表
+   - 执行 `/lc-feat:e2e` 逻辑（根据需求和设计生成 E2E 测试 → 浏览器执行 → 保存截图 → 自动修复失败用例）
+   - 产出：测试文件 + 截图（`tests/e2e/results/screenshots/{feat-name}/`）+ `e2e-report.md`
+   - **质量门控**：
+     - 全部通过 → 自动继续
+     - 有失败（3 轮修复后仍失败）→ **暂停**：
+       > "E2E 测试发现 {N} 个失败用例，可能是页面交互 bug，请检查截图后继续。"
+   - 如果项目未配置 Playwright → 跳过并标记 skipped，记录 decision
+   - **暂停**：`是否继续 Step 8（QA 分析）？ y — 继续 / s — 跳过`
+
+   ### Step 8: QA 分析（lite 模式跳过，标记 skipped）
    - **Preamble**：加载 requirement.md + design.md 摘要 + 改动文件列表
    - 执行 `/lc-feat:qa` 逻辑
    - 产出：`qa-report.md`
@@ -272,6 +296,7 @@ metadata:
    > 注意：仅在所有步骤完成后执行，中途中断不写入。
 
 **Guardrails**
+- **【强制·阻断】编码阶段必须通过 Skill tool 实际调用项目对应的编码规范 skill**（h5-vue→`lc-kejinshou-h5-vue`，h5-nuxt→`lc-kejinshou-h5-nuxt`，backend→`lc-kejinshou-backend-page`），每次编码都必须产生一次 Skill tool call，不可凭记忆替代，未调用不得编码
 - **流水线全程不执行任何 git 操作**（不 add、不 commit、不 push、不创建 PR）
 - git 操作由用户自行决定和执行
 - 每步完成必须暂停等待确认（lint 自动通过时除外），提示格式统一为 `y — 继续 / s — 跳过`
@@ -282,14 +307,16 @@ metadata:
 - 用户随时可以说"跳过"或"回退到{步骤}"
 - lite 模式适用于小改动，避免为 10 行代码跑完 7 步
 - 跳过的步骤标记为 `skipped` 而非 `done`
+- **修改任何 lc-feat-* skill 后，必须同步更新流水线使用指南**（路径：`~/.claude/skills/docs/lc-feat-pipeline-guide.md`）。更新内容包括：步骤说明、命令参数、产出文件、质量门控规则等与 skill 变更相关的章节。同时更新指南头部的版本号和更新日期
 
 **`--auto` 全自动模式规则**
 
 当传入 `--auto` 参数时，流水线进入全自动模式：
 
 - **不暂停、不等待确认**，所有步骤连续执行，中间不询问用户
+- **⚠️ --auto 模式同样必须调用 Skill tool 加载项目编码规范 skill，不可跳过**
 - **默认走完整流程（full 模式）**，除非用户显式指定 `--mode=lite`
-- 质量门控自动决策：lint error 自动 `--fix`；测试失败自动修复最多 2 轮，仍失败则标记 skipped 继续
+- 质量门控自动决策：lint error 自动 `--fix`；测试/E2E 失败自动修复最多 2 轮，仍失败则标记 skipped 继续
 - 设计审核发现的问题自动修订，不暂停
 - 仍然生成产出文档（requirement.md / design.md 等），确保可追溯和断点恢复
 - 仍然更新 `progress.yaml`，确保可追溯

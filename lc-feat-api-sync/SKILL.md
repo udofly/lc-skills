@@ -4,7 +4,8 @@ description: 接口同步技能。当真实接口就绪后，从Apifox MCP读取
 license: MIT
 metadata:
   author: kejinshou-team
-  version: "0.0.1"
+  version: "0.0.2"
+  pipeline_guide: "~/.claude/skills/docs/lc-feat-pipeline-guide.md"
 ---
 
 # Mock 转真实接口

@@ -5,6 +5,7 @@ license: MIT
 metadata:
   author: kejinshou-team
   version: "0.0.2"
+  pipeline_guide: "~/.claude/skills/docs/lc-feat-pipeline-guide.md"
 ---
 
 # 代码质量检查

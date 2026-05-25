@@ -28,9 +28,17 @@ description: 生成 backend-kejinshou 项目标准页面（包含搜索、表格
 </KrCard>
 ```
 
-**搜索表单**
+**搜索表单**（当搜索表单前面有 KrTabs 等组件时，需加 `class="table-wrapper"` 保持 8px 间距）
 ```vue
+<!-- 无 Tabs 时 -->
 <KrForm :layout="'inline'" :schema="searchSchema" :submit="submitSearch" :reset="resetSearch">
+    <KrButton type="submit">搜索</KrButton>
+    <KrButton theme="default" variant="base" type="reset">重置</KrButton>
+</KrForm>
+
+<!-- 有 Tabs 时，KrForm 需加 class="table-wrapper" -->
+<KrTabs type="filter" :active="games.active" :list="games.list" @change="gameChange" />
+<KrForm class="table-wrapper" :layout="'inline'" :schema="searchSchema" :submit="submitSearch" :reset="resetSearch">
     <KrButton type="submit">搜索</KrButton>
     <KrButton theme="default" variant="base" type="reset">重置</KrButton>
 </KrForm>
@@ -483,14 +491,14 @@ export default [
    - 输出新增权限列表（含 `url`、`permission`、`name`），特别标注与当前功能相关的权限
 
 3. **将新增权限补充到 `permissions.ts`**（有新增时执行）
-   仅追加 `newOnly` 中的权限到 `permissions.ts` 末尾（`};` 之前），格式：
-   ```typescript
-   // ✅ {name}：{url}
-   KjsBackendXxxYyy: '{permission}',
-   ```
+   仅追加 `newOnly` 中的权限到 `permissions.ts` 末尾（`};` 之前）。
    - Key 生成规则：去掉 `kjs_backend.` 前缀 → 按 `.` 分割 → 每段首字母大写驼峰 → 拼接为 `KjsBackend{...}`
-   - 当前功能用到的标注 `// ✅`
-   - 未对接的标注 `//`（不加 ✅）
+   - **写入时一律不加 ✅**，统一用无标记格式：
+     ```typescript
+     // {name}：{url}
+     KjsBackendXxxYyy: '{permission}',
+     ```
+   - **✅ 标记只在步骤 5 完成后回头补加**——仅当该权限常量确实出现在 `v-isAuth` 或 `isPermission()` 调用中时，才将注释改为 `// ✅`
 
 4. **覆盖更新本地权限快照**（必须执行）
    将步骤 1 获取的最新数据覆盖写入本地快照：
@@ -498,18 +506,23 @@ export default [
    cp /tmp/permissions_latest.json src/services/permissionsCur.json
    ```
 
-5. **在页面代码中对接权限**（必须执行）
+5. **在页面代码中对接权限，然后回标 ✅**（必须执行）
    - 编辑/删除按钮加 `v-isAuth="[Perms.KjsBackendXxxSave]"` 或在 JSX 中用 `isPermission(Perms.KjsBackendXxxSave)`
    - 路由 meta.permissions 引用对应 Perms 枚举
    - 如果新增权限列表中**不包含**当前页面对应的权限 → **使用 `Perms.PAGE_VIEW` 兜底，严禁自行编造权限常量**
+   - **对接完成后，用 Grep 搜索 `Perms.KjsBackend` 在 `.vue`/`.ts` 文件中的实际引用（排除 `permissions.ts` 自身），只有被 `v-isAuth` / `isPermission()` / `meta.permissions` 真正引用的权限才回到 `permissions.ts` 中将注释改为 `// ✅`。纯接口调用（service 函数）不算对接。**
 
 ### 7.3 权限格式约定
 ```typescript
-// ✅ {接口描述}：{接口URL}
+// ✅ {接口描述}：{接口URL}      ← 已在 v-isAuth / isPermission / meta.permissions 中使用
 KjsBackendXxxYyy: 'kjs_backend.xxx.yyy',
+
+// {接口描述}：{接口URL}          ← 后端已注册，前端尚未对接
+KjsBackendXxxZzz: 'kjs_backend.xxx.zzz',
 ```
-- `✅` 表示该权限已在页面/按钮中对接使用
+- `✅` **仅表示**该权限常量已在页面 `v-isAuth`、JSX `isPermission()` 或路由 `meta.permissions` 中被引用
 - 无 `✅` 表示权限已注册但尚未在前端使用
+- **严禁在步骤 3 写入时就标 ✅，必须在步骤 5 对接并验证后才标**
 
 ## 8. toast 使用说明
 
@@ -547,3 +560,4 @@ toast(message, success);   // success=true 显示成功，false 显示警告
 - 搜索重置时要将 `pagination.current` 重置为 1
 - **搜索表单字段禁止手动设置 `style: { width: '...' }`**，让组件自适应宽度
 - **操作列按钮统一使用 `KrButton size="small" variant="text"`**，禁止使用 `t-link`
+- **组件间距规则**：当 KrForm 前面有 KrTabs 等兄弟组件时，KrForm 需加 `class="table-wrapper"` 保持 8px 间距；KrTable 同理。`table-wrapper` 样式统一用于相邻组件间 8px 上间距
