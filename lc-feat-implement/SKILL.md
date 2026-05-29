@@ -32,7 +32,6 @@ metadata:
    并行读取：
    - `docs/pipeline/{feat-name}/design.md`
    - `docs/pipeline/{feat-name}/requirement.md`
-   - `docs/pipeline/{feat-name}/design-review.md`（如存在）
 
    如果设计文档不存在，检查需求文档：
    - 需求文档存在且改动量小（功能扩展/Bug修复）→ 直接基于需求文档编码
@@ -117,7 +116,7 @@ metadata:
 8. **输出确认**
 
    展示生成的文件清单，使用 **AskUserQuestion tool**：
-   > "编码完成，生成/修改了以下文件：\n{文件列表}\n\n建议执行 `/lc-feat:lint {feat-name}` 进行代码质量检查。"
+   > "编码完成，生成/修改了以下文件：\n{文件列表}\n\n建议执行 `/lc-feat:verify {feat-name}` 进行代码验证。"
 
 **Guardrails**
 - **【强制·阻断】必须通过 Skill tool 实际调用项目对应的编码规范 skill**（h5-vue→`lc-kejinshou-h5-vue`，h5-nuxt→`lc-kejinshou-h5-nuxt`，backend→`lc-kejinshou-backend-page`），每次编码都必须产生一次 Skill tool call，不可凭记忆替代，未调用不得编码

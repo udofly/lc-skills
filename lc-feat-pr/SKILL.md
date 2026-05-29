@@ -25,7 +25,7 @@ metadata:
    读取：
    - `docs/pipeline/{feat-name}/requirement.md`
    - `docs/pipeline/{feat-name}/design.md`（如存在）
-   - `docs/pipeline/{feat-name}/lint-report.md`（如存在，避免重复报告 lint 已处理的问题）
+   - `docs/pipeline/{feat-name}/verify-report.md`（如存在，避免重复报告已处理的问题）
    - 所有功能相关的源代码改动文件（通过 `git diff --name-only master` 得到的文件列表，用 Read 工具读取）
 
 2. **代码审查分析**
@@ -145,7 +145,7 @@ metadata:
 - **CR 阶段的自动修复仅限 A 类（不影响逻辑的清理类问题）**
 - **绝不自动修改条件判断、数据流、函数签名、业务逻辑**
 - 自动修复后必须重新 ESLint 验证，确认没有引入新错误
-- 如果 lint-report.md 已记录某问题，CR 不重复报告
+- 如果 verify-report.md 已记录某问题，CR 不重复报告
 - PR 阶段必须逐步确认：commit → push → create PR，每步需用户同意
 - 不要 force push，不要 push 到 master/main
 - commit message 遵循 Angular 规范：`feat/fix/chore(scope): description`

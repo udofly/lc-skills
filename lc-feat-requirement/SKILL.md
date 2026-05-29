@@ -23,7 +23,10 @@ metadata:
    如果用户没有提供足够的需求描述，使用 **AskUserQuestion tool** 询问：
    > "请描述你想要实现的功能，可以提供文字说明、截图路径或相关文档。"
 
-   从描述中提取功能名称（kebab-case），如 "添加商品管理" → `goods-manage`。
+   **feat-name 命名规则（优先级从高到低）**：
+   1. 从当前 git 分支名提取（`git branch --show-current`），去掉 `feature/` 前缀。例：`feature/3.38-estimate-xingliao` → `3.38-estimate-xingliao`
+   2. 用户显式指定的名称
+   3. 从描述中提取（kebab-case），如 "添加商品管理" → `goods-manage`（仅在无分支信息时使用）
 
 2. **识别需求类型**
 

@@ -4,31 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="329e5df7-a489-4fc6-97f4-79f3a86b4a8f" name="Changes" comment="chore: 添加项目IDE配置和性能基准测试技能&#10;&#10;- 添加 .idea/workspace.xml 配置文件用于IDE设置&#10;- 添加 benchmark 技能的完整实现文档&#10;- 实现性能回归检测功能用于页面加载时间基准测试&#10;- 添加核心Web Vitals和资源大小的性能监控功能&#10;- 配置浏览守护进程用于PR前后的性能对比检测">
-      <change afterPath="$PROJECT_DIR$/docs/lc-feat-changelog.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/lc-feat-coding-standard-loading.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/lc-feat-e2e-guide.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-feat-document-release/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-feat-e2e/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-kejinshou-android/SKILL.md" afterDir="false" />
+    <list default="true" id="329e5df7-a489-4fc6-97f4-79f3a86b4a8f" name="Changes" comment="feat(qa): 新增变更影响分析维度提升质量审查覆盖度&#10;&#10;- 参考 lc-branch-impact-analysis 和 lc-commit-impact-analysis 分析手法&#10;- 新增 4.6 变更影响分析（回归安全性）包含 8 种 bug 模式检测&#10;- 添加删除/重命名 grep 验证、行为变更检测、配置影响评估&#10;- QA 报告模板扩展为六维度评分体系（5 → 6 维度）&#10;- pipeline-guide 同步更新为六维度评审标准&#10;- 文档示例和交互指南全面适配新评审维度">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-feat-changelog.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-changelog.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-feat-coding-standard-loading.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-coding-standard-loading.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/lc-feat-pipeline-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-pipeline-guide.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/lc-feat-upgrade-v0.01.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-api-sync/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-api-sync/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-design-review/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-design-review/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-design-review/SKILL.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-feat-design/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-design/SKILL.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-feat-implement/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-implement/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-lint/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-lint/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-lint/SKILL.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-feat-pipeline/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-pipeline/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-post-ship/SKILL.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-feat-pr/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-pr/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-qa/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-qa/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-qa/SKILL.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-feat-requirement/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-requirement/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-test/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-test/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kejinshou-backend-page/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-backend-page/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-test/SKILL.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,7 +174,8 @@
       <workItem from="1777427765612" duration="4293000" />
       <workItem from="1777538187777" duration="2902000" />
       <workItem from="1778031729242" duration="24000" />
-      <workItem from="1779681481516" duration="2294000" />
+      <workItem from="1779681481516" duration="7053000" />
+      <workItem from="1780048684370" duration="1407000" />
     </task>
     <task id="LOCAL-00001" summary="chore: 初始化项目配置并添加性能基准测试技能&#10;&#10;- 添加 .idea 相关配置文件到 gitignore&#10;- 创建 modules.xml 和 skills.iml 配置文件&#10;- 添加 benchmark 性能基准测试技能文档和实现&#10;- 添加 browse 浏览器自动化技能文档和实现&#10;- 配置技能的 preamble 执行逻辑&#10;- 设置性能监控和基线比较功能&#10;- 实现页面加载时间、核心网络指标检测&#10;- 添加资源大小和请求数量分析功能">
       <option name="closed" value="true" />
@@ -274,7 +265,23 @@
       <option name="project" value="LOCAL" />
       <updated>1777427878944</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="chore: 添加项目IDE配置和性能基准测试技能&#10;&#10;- 添加 .idea/workspace.xml 配置文件用于IDE设置&#10;- 添加 benchmark 技能的完整实现文档&#10;- 实现性能回归检测功能用于页面加载时间基准测试&#10;- 添加核心Web Vitals和资源大小的性能监控功能&#10;- 配置浏览守护进程用于PR前后的性能对比检测&#10;- 添加项目变更日志文档记录所有skill版本更新&#10;- 添加编码规范加载共享流程文档&#10;- 添加E2E测试完整指南文档&#10;- 更新流水线使用指南至v1.3版本">
+      <option name="closed" value="true" />
+      <created>1779687235230</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1779687235230</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat(qa): 新增变更影响分析维度提升质量审查覆盖度&#10;&#10;- 参考 lc-branch-impact-analysis 和 lc-commit-impact-analysis 分析手法&#10;- 新增 4.6 变更影响分析（回归安全性）包含 8 种 bug 模式检测&#10;- 添加删除/重命名 grep 验证、行为变更检测、配置影响评估&#10;- QA 报告模板扩展为六维度评分体系（5 → 6 维度）&#10;- pipeline-guide 同步更新为六维度评审标准&#10;- 文档示例和交互指南全面适配新评审维度">
+      <option name="closed" value="true" />
+      <created>1779691766652</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1779691766652</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,6 +310,8 @@
     <MESSAGE value="feat:test account 3" />
     <MESSAGE value="feat:test account 4" />
     <MESSAGE value="chore: 添加项目IDE配置和性能基准测试技能&#10;&#10;- 添加 .idea/workspace.xml 配置文件用于IDE设置&#10;- 添加 benchmark 技能的完整实现文档&#10;- 实现性能回归检测功能用于页面加载时间基准测试&#10;- 添加核心Web Vitals和资源大小的性能监控功能&#10;- 配置浏览守护进程用于PR前后的性能对比检测" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: 添加项目IDE配置和性能基准测试技能&#10;&#10;- 添加 .idea/workspace.xml 配置文件用于IDE设置&#10;- 添加 benchmark 技能的完整实现文档&#10;- 实现性能回归检测功能用于页面加载时间基准测试&#10;- 添加核心Web Vitals和资源大小的性能监控功能&#10;- 配置浏览守护进程用于PR前后的性能对比检测" />
+    <MESSAGE value="chore: 添加项目IDE配置和性能基准测试技能&#10;&#10;- 添加 .idea/workspace.xml 配置文件用于IDE设置&#10;- 添加 benchmark 技能的完整实现文档&#10;- 实现性能回归检测功能用于页面加载时间基准测试&#10;- 添加核心Web Vitals和资源大小的性能监控功能&#10;- 配置浏览守护进程用于PR前后的性能对比检测&#10;- 添加项目变更日志文档记录所有skill版本更新&#10;- 添加编码规范加载共享流程文档&#10;- 添加E2E测试完整指南文档&#10;- 更新流水线使用指南至v1.3版本" />
+    <MESSAGE value="feat(qa): 新增变更影响分析维度提升质量审查覆盖度&#10;&#10;- 参考 lc-branch-impact-analysis 和 lc-commit-impact-analysis 分析手法&#10;- 新增 4.6 变更影响分析（回归安全性）包含 8 种 bug 模式检测&#10;- 添加删除/重命名 grep 验证、行为变更检测、配置影响评估&#10;- QA 报告模板扩展为六维度评分体系（5 → 6 维度）&#10;- pipeline-guide 同步更新为六维度评审标准&#10;- 文档示例和交互指南全面适配新评审维度" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(qa): 新增变更影响分析维度提升质量审查覆盖度&#10;&#10;- 参考 lc-branch-impact-analysis 和 lc-commit-impact-analysis 分析手法&#10;- 新增 4.6 变更影响分析（回归安全性）包含 8 种 bug 模式检测&#10;- 添加删除/重命名 grep 验证、行为变更检测、配置影响评估&#10;- QA 报告模板扩展为六维度评分体系（5 → 6 维度）&#10;- pipeline-guide 同步更新为六维度评审标准&#10;- 文档示例和交互指南全面适配新评审维度" />
   </component>
 </project>

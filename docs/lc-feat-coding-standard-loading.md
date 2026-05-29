@@ -1,7 +1,7 @@
 # 加载项目编码规范（共享流程）
 
 > 本文档定义了 lc-feat 流水线中各 skill 加载项目编码规范的标准流程。
-> 被引用于：pipeline、implement、design、design-review、qa
+> 被引用于：pipeline、implement、design、qa
 
 ---
 
@@ -29,8 +29,7 @@
 
 | Skill | 用途 | 是否必须 Skill tool call |
 |-------|------|------------------------|
-| pipeline (Step 4) | 编码前加载规范 | ⛔ 必须（阻断） |
+| pipeline (Step 3) | 编码前加载规范 | ⛔ 必须（阻断） |
 | implement (Step 3) | 编码前加载规范 | ⛔ 必须（阻断） |
-| design (Step 2) | 设计时参考规范 | 建议加载，非阻断 |
-| design-review (Step 2) | 审查时对照规范 | 建议加载，非阻断 |
-| qa (Step 2) | QA 检查标准 | 建议加载，非阻断 |
+| design (Step 2) | 设计时参考规范（含自审） | 建议加载，非阻断 |
+| verify (Step 2) | 验证检查标准 | 建议加载，非阻断 |

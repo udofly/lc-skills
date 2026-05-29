@@ -8,15 +8,12 @@
 
 | Skill | 版本 | 最近更新 |
 |---|---|---|
-| lc-feat-pipeline | 0.0.3 | 2026-05-25 |
+| lc-feat-pipeline | 0.0.5 | 2026-05-29 |
 | lc-feat-requirement | 0.0.2 | 2026-05-25 |
-| lc-feat-design | 0.0.2 | 2026-05-25 |
-| lc-feat-design-review | 0.0.2 | 2026-05-25 |
+| lc-feat-design | 0.0.3 | 2026-05-29 |
 | lc-feat-implement | 0.0.2 | 2026-05-25 |
-| lc-feat-lint | 0.0.2 | 2026-05-25 |
-| lc-feat-test | 0.0.3 | 2026-05-25 |
+| lc-feat-verify | 0.0.1 | 2026-05-29 |
 | lc-feat-e2e | 0.0.3 | 2026-05-25 |
-| lc-feat-qa | 0.0.3 | 2026-05-25 |
 | lc-feat-pr | 0.0.2 | 2026-05-25 |
 | lc-feat-document-release | 0.0.4 | 2026-05-25 |
 | lc-feat-api-sync | 0.0.2 | 2026-05-25 |
@@ -24,6 +21,23 @@
 ---
 
 ## 更新记录
+
+### 2026-05-29 — 流水线精简（design-review 合并 + lint/test/qa 合并）
+
+**lc-feat-design** v0.0.3：design-review 合并到 design 中
+- 设计自审（5 维度）作为设计步骤的一部分，生成后立即执行
+- 不再单独生成 `design-review.md`，自审修订记录写入 `design.md`
+- 删除 `lc-feat-design-review` skill
+
+**lc-feat-verify** v0.0.1：lint + test + qa 合并为统一验证步骤
+- 三阶段验证：静态检查（Lint）→ 单元测试（Test）→ 综合质量分析（QA）
+- 输出统一的 `verify-report.md`（含三个章节），替代原来的 `lint-report.md` + `test-report.md` + `qa-report.md`
+- 删除 `lc-feat-lint`、`lc-feat-test`、`lc-feat-qa` 三个 skill
+
+**lc-feat-pipeline** v0.0.5：流水线从 8 步精简到 5 步
+- Full 模式：requirement → design → implement → verify → e2e（5 步）
+- Lite 模式：requirement → implement → verify（3 步）
+- 更新 progress.yaml 模板、示例、交互提示
 
 ### 2026-05-25 — qa v0.0.3
 

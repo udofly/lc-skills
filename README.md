@@ -1,15 +1,15 @@
 # Claude Code Skills 清单
 
 > 全局安装目录：`~/.claude/skills/`
-> 最近更新：2026-05-25
+> 最近更新：2026-05-29
 
 ---
 
 ## lc-feat 功能开发流水线
 
-端到端的功能开发流水线，12 个 skill 覆盖从需求分析到发布文档的完整生命周期。
+端到端的功能开发流水线，10 个 skill 覆盖从需求分析到发布文档的完整生命周期。
 
-> 详细使用指南：[lc-feat-pipeline-guide.md](docs/lc-feat-pipeline-guide.md) (v1.3)
+> 详细使用指南：[lc-feat-pipeline-guide.md](docs/lc-feat-pipeline-guide.md) (v1.5)
 > 
 > E2E 测试指南：[lc-feat-e2e-guide.md](docs/lc-feat-e2e-guide.md) (v1.0)
 > 
@@ -17,18 +17,15 @@
 > 
 > 共享规范加载流程：[lc-feat-coding-standard-loading.md](docs/lc-feat-coding-standard-loading.md)
 
-### 主流程（8 步）
+### 主流程（5 步）
 
 | 序号 | Skill | 版本 | 命令 | 说明 |
 |------|-------|------|------|------|
 | 1 | [lc-feat-requirement](lc-feat-requirement/SKILL.md) | 0.0.2 | `/lc-feat:requirement` | 需求分析，文字/截图/文档转结构化需求文档 |
-| 2 | [lc-feat-design](lc-feat-design/SKILL.md) | 0.0.2 | `/lc-feat:design` | 技术设计，生成组件/路由/Service/权限设计文档 |
-| 3 | [lc-feat-design-review](lc-feat-design-review/SKILL.md) | 0.0.2 | `/lc-feat:design-review` | 设计审核 + 架构评审，六维度审查并修订 |
-| 4 | [lc-feat-implement](lc-feat-implement/SKILL.md) | 0.0.2 | `/lc-feat:implement` | 编码实现，按项目规范生成代码 |
-| 5 | [lc-feat-lint](lc-feat-lint/SKILL.md) | 0.0.2 | `/lc-feat:lint` | 代码检查，ESLint + Stylelint + TypeScript |
-| 6 | [lc-feat-test](lc-feat-test/SKILL.md) | 0.0.3 | `/lc-feat:test` | 单元测试，仅测核心函数（纯函数/工具函数） |
-| 7 | [lc-feat-e2e](lc-feat-e2e/SKILL.md) | 0.0.3 | `/lc-feat:e2e` | E2E 测试，Playwright 浏览器验证 + 截图 |
-| 8 | [lc-feat-qa](lc-feat-qa/SKILL.md) | 0.0.2 | `/lc-feat:qa` | QA 分析，五维度评审（0-10 评分） |
+| 2 | [lc-feat-design](lc-feat-design/SKILL.md) | 0.0.3 | `/lc-feat:design` | 技术设计（含自审），生成组件/路由/Service/权限设计文档 |
+| 3 | [lc-feat-implement](lc-feat-implement/SKILL.md) | 0.0.2 | `/lc-feat:implement` | 编码实现，按项目规范生成代码 |
+| 4 | [lc-feat-verify](lc-feat-verify/SKILL.md) | 0.0.1 | `/lc-feat:verify` | 代码验证（Lint + Test + QA 三阶段合并） |
+| 5 | [lc-feat-e2e](lc-feat-e2e/SKILL.md) | 0.0.3 | `/lc-feat:e2e` | E2E 测试，Playwright 浏览器验证 + 截图 |
 
 ### 独立步骤
 
@@ -47,7 +44,7 @@
 
 | Skill | 版本 | 命令 | 说明 |
 |-------|------|------|------|
-| [lc-feat-pipeline](lc-feat-pipeline/SKILL.md) | 0.0.3 | `/lc-feat:pipeline` | 一键串联 1-8 步，支持 `--from` 断点恢复、`--auto` 全自动 |
+| [lc-feat-pipeline](lc-feat-pipeline/SKILL.md) | 0.0.5 | `/lc-feat:pipeline` | 一键串联 1-5 步，支持 `--from` 断点恢复、`--auto` 全自动 |
 
 ---
 
