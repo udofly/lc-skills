@@ -1,116 +1,120 @@
-# lc-feat E2E 测试完整指南
+# Playwright E2E 测试通用指南
 
-> **版本**：v1.0 | **更新**：2026-05-25
-> **适用**：kejinshou_m（Vue 3 + Vite H5）及所有 lc-feat 工作流项目
-> **工具链**：Playwright + Claude Code + lc-feat pipeline
+> **版本**：v2.1 | **更新**：2026-06-29
+> **定位**：**项目无关、独立可用**的 H5/Web E2E 测试指南。核心内容（环境 → 配置 → 写用例 → 执行 → 排错）只依赖 Playwright，不绑定任何工作流或项目。
+> **可选**：可与 lc-feat 流水线配合，按文档**自动生成**用例——见 [§十五](#十五可选与-lc-feat-流水线配合使用)，不需要时可完全忽略。
+> 具体项目（kejinshou_m、h5-nuxt 等）仅作**配置举例**。
 
 ---
 
 ## 目录
 
-- [一、E2E 在 lc-feat 工作流中的位置](#一e2e-在-lc-feat-工作流中的位置)
-- [二、环境准备](#二环境准备)
-- [三、项目配置详解](#三项目配置详解)
-- [四、使用方式](#四使用方式)
-- [五、测试生成规则](#五测试生成规则)
-- [六、选择器与等待策略](#六选择器与等待策略)
-- [七、截图策略](#七截图策略)
-- [八、失败诊断与自动修复](#八失败诊断与自动修复)
-- [��、Vue3 vs Nuxt3 差异](#九vue3-vs-nuxt3-差异)
+**核心（独立可用）**
+- [一、总览](#一总览)
+- [二、标准目录结构（约定）](#二标准目录结构约定)
+- [三、环境准备](#三环境准备)
+- [四、配置：通用模板 + 项目配置矩阵](#四配置通用模板--项目配置矩阵)
+- [五、选择器与等待策略](#五选择器与等待策略)
+- [六、截图策略](#六截图策略)
+- [七、哪些适合 E2E、哪些不适合](#七哪些适合-e2e哪些不适合)
+- [八、失败诊断与修复](#八失败诊断与修复)
+- [九、框架差异：SPA（Vite）vs SSR（Nuxt）](#九框架差异spavite-vs-ssrnuxt)
 - [十、H5 移动端专项](#十h5-移动端专项)
 - [十一、常见坑与解决方案](#十一常见坑与解决方案)
 - [十二、测试模板](#十二测试模板)
 - [十三、报告产出](#十三报告产出)
-- [十四、日常命令速查](#十四日常命令速查)
+- [十四、命令速查](#十四命令速查)
+
+**可选集成**
+- [十五、（可选）与 lc-feat 流水线配合使用](#十五可选与-lc-feat-流水线配合使用)
+- [附录：快速检查清单](#附录快速检查清单)
 
 ---
 
-## 一、E2E 在 lc-feat 工作流中的位置
+## 一、总览
 
-```
-需求 → 设计 → 审核 → 编码 → Lint → 单元测试 → 【E2E 测试】 → QA → PR
-                                                      ↑ 第7步
-```
+本指南独立讲 Playwright E2E，**不依赖任何工作流**：照着 §二～§十四，手写 `*.spec.ts` 即可完整跑通。
 
-E2E 是流水线第 7 步（共 8 步主流程），位于单元测试之后、QA 分析之前。
+E2E 有两种落地方式：
 
-### 触发方式
-
-| 方式 | 命令 | 说明 |
+| 方式 | 说明 | 位置 |
 |------|------|------|
-| Pipeline 中自动执行 | `/lc-feat:pipeline <feat-name>` | 作为第 7 步自动运行 |
-| 独立调用 | `/lc-feat:e2e <feat-name>` | 单独执行 E2E 测试 |
-| 全自动模式 | `/lc-feat:pipeline <feat-name> --auto` | ���需确认连续执行 |
-| 断点恢复 | `/lc-feat:pipeline <feat-name> --from=e2e` | 从 E2E 步骤开始 |
+| **① 手动写 spec** | 纯 Playwright，自己写用例。完整、可控、零额外依赖 | 本指南主体（§二～§十四）|
+| **② 自动生成（可选）** | 配合 `lc-feat:e2e` 按文档自动生成并执行用例 | §十五，可忽略 |
 
-### Pipeline 降级
-
-当环境不就绪时：
-- **Pipeline 中**：自动标记为 `skipped`，继续执行 QA
-- **独立调用**：提示安装命令，等待用户操作
+两种方式产出同一套结构（`tests/e2e/specs/*.spec.ts` + 截图 + 报告），可混用。无论哪种，§五～§十二 的编写规则、模板、排错都通用。
 
 ---
 
-## 二、环境准备
+## 二、标准目录结构（约定）
 
-### 2.1 一次性安装
-
-```bash
-# 进入项目的 tests/e2e 目录（kejinshou_m 已有此目录）
-cd tests/e2e
-
-# 安装 Playwright
-npm install @playwright/test
-
-# 安装 Chromium 浏览器
-npx playwright install chromium
-```
-
-### 2.2 验证安装
-
-```bash
-cd tests/e2e && npx playwright test --list
-```
-
-如果输出测试列表，说明环境 OK。
-
-### 2.3 目录结构
+E2E 作为**独立子工程**放在 `tests/e2e/`，与主工程依赖隔离（浏览器二进制不污染主 build）。所有项目通用：
 
 ```
 tests/e2e/
-├── .gitignore              # 忽略 node_modules/results/report
-├── package.json            # @playwright/test 依赖
-├── playwright.config.ts    # Playwright 配置
+├── .gitignore              # 忽略 node_modules/ results/ report/
+├── package.json            # 自包含子工程，仅依赖 @playwright/test
+├── playwright.config.ts    # Playwright 配置（端口/设备/webServer 按项目填）
 ├── specs/                  # 测试文件目录
-│   ├── demo.spec.ts        # 基础验证（已有）
 │   └── {feat-name}.spec.ts # 每个功能一个文件
 ├── results/                # 执行产物（gitignore）
-│   ├── .last-run.json
-│   └── screenshots/        # 截图目录
-│       └── {feat-name}/    # 按功能隔离
+│   └── screenshots/
+│       └── {feat-name}/    # 截图按功能隔离
 └── report/                 # HTML/JSON 报告（gitignore）
     ├── index.html
     └── results.json
 ```
 
-### 2.4 可选：MCP 集成
+> **为什么独立子工程**：Playwright + 浏览器内核体积大，独立 `package.json` 让它不进主工程依赖树，尤其适合 SSR 项目（避免干扰主 build）。
+
+---
+
+## 三、环境准备
+
+### 3.1 一次性安装
+
+子工程用项目自身的包管理器安装（`npm` / `pnpm` / `yarn` 任一）：
 
 ```bash
-# 全局注册 Playwright MCP（支持 AI 直接操控浏览器）
+cd tests/e2e
+
+# 安装 Playwright
+npm install          # 或 pnpm install
+
+# 安装 Chromium 浏览器内核
+npx playwright install chromium
+```
+
+> ⚠️ **版本对齐坑**：Playwright 每个版本绑定特定浏览器 build。新装/升级 `@playwright/test` 后**必须重跑** `npx playwright install chromium`，否则报 `Executable doesn't exist at .../chromium_headless_shell-XXXX`。
+> 若多进程并发安装出现 `__dirlock` 锁错误：`rm -rf ~/Library/Caches/ms-playwright/__dirlock` 后重装。
+
+### 3.2 验证安装
+
+```bash
+cd tests/e2e && npx playwright test --list
+```
+
+能列出用例即环境就绪。
+
+### 3.3 可选：Playwright MCP
+
+```bash
 claude mcp add playwright -s user -- npx @playwright/mcp@latest
 ```
 
 ---
 
-## 三、项目配置详解
+## 四、配置：通用模板 + 项目配置矩阵
 
-### 3.1 kejinshou_m 的 playwright.config.ts
+### 4.1 通用 playwright.config.ts 模板
+
+各项目结构一致，**只需改 4 处**（`baseURL` / `webServer.command` / `timeout` / 设备）：
 
 ```typescript
-import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
+import { defineConfig, devices } from '@playwright/test'
+import path from 'path'
 
-const projectRoot = path.resolve(__dirname, '../../');
+const projectRoot = path.resolve(__dirname, '../../')
 
 export default defineConfig({
     testDir: './specs',
@@ -121,129 +125,49 @@ export default defineConfig({
         ['list'],
     ],
     use: {
-        baseURL: 'http://localhost:9241',
-        screenshot: 'off',      // 手动截图由测试代码控制
+        baseURL: 'http://localhost:<PORT>',   // ← 改：项目 dev 端口
+        screenshot: 'off',                     // 手动截图由测试代码控制
         video: 'retain-on-failure',
         trace: 'on-first-retry',
     },
     projects: [
-        { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
+        { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },  // ← 改：H5 用移动设备，PC 用 Desktop Chrome
     ],
     webServer: {
-        command: 'npm run start:dev',
-        url: 'http://localhost:9241',
-        reuseExistingServer: true,  // 已启动则复用，未启动则自动启动
-        timeout: 60_000,
+        command: '<DEV_COMMAND>',              // ← 改：项目 dev 启动命令
+        url: 'http://localhost:<PORT>',        // ← 改：同 baseURL
+        reuseExistingServer: true,             // 已启动则复用，未启动则自动拉起
+        timeout: <TIMEOUT>,                    // ← 改：SPA 60s，SSR 建议 120s
         cwd: projectRoot,
     },
-});
+})
 ```
 
-### 3.2 关键配置说明
+### 4.2 项目配置矩阵（举例）
 
-| 配置项 | 值 | 说明 |
-|--------|---|------|
-| `baseURL` | `http://localhost:9241` | kejinshou_m 的 dev server 端口 |
-| `screenshot` | `'off'` | 不自动截图，由测试代码 `page.screenshot()` 手动控制 |
-| `webServer.reuseExistingServer` | `true` | 已启动 dev server 则复用，不重复启动 |
-| `webServer.cwd` | 项目根目录 | 确保 `npm run start:dev` 在正确位置执行 |
-| `projects` | `Pixel 5` | H5 移动端模拟设备 |
+| 项目 | 框架 | 包管理 | dev 命令 | 端口 | 设备 | webServer timeout |
+|------|------|--------|----------|------|------|-------------------|
+| **kejinshou_m** | Vue 3 + Vite (H5) | npm | `npm run start:dev` | 9241 | Pixel 5 | 60s |
+| **h5-nuxt** | Nuxt 3 (H5, SSR) | pnpm | `pnpm start:dev` | 9158 | Pixel 5 | 120s |
+| **backend** | Vue 3 + Vite (PC) | npm | `npm run dev` | 5173 | Desktop Chrome | 60s |
 
-### 3.3 不同项目类型的配置差异
+> 参考值，**以各项目实际 `nuxt.config.ts` / `vite.config.ts` 端口和 `package.json` 脚本为准**。SSR 项目冷启慢，`timeout` 给足（≥120s）。
 
-| 项目类型 | baseURL | 设备 | webServer timeout |
-|---------|---------|------|-------------------|
-| kejinshou_m (Vue3 H5) | `localhost:9241` | Pixel 5 | 60s |
-| h5-nuxt (Nuxt3 H5) | `localhost:3000` | Pixel 5 / iPhone 12 | 120s |
-| backend (Vue3 PC) | `localhost:5173` | Desktop Chrome | 60s |
+### 4.3 关键配置说明
+
+| 配置项 | 推荐值 | 说明 |
+|--------|--------|------|
+| `screenshot` | `'off'` | 不自动截图，由测试代码 `page.screenshot()` 手动控制时机 |
+| `video` | `'retain-on-failure'` | 仅失败保留录像 |
+| `trace` | `'on-first-retry'` | 重试保留 trace，可 `npx playwright show-trace` 回放 |
+| `webServer.reuseExistingServer` | `true` | 本地已开 dev 则复用 |
+| `webServer.cwd` | 项目根目录 | 确保 dev 命令在正确位置执行 |
 
 ---
 
-## 四、使用方式
+## 五、选择器与等待策略
 
-### 4.1 在 Pipeline 中自动执行
-
-```bash
-# 完整流水线，E2E 作为第 7 步自动执行
-/lc-feat:pipeline 3.37-bargain
-
-# 从 E2E 步骤断点恢复
-/lc-feat:pipeline 3.37-bargain --from=e2e
-```
-
-AI 自动完成：读取需求/设计 → 生成测试 → 执行 → 失败自动修复 → 生成报告
-
-### 4.2 独立执行
-
-```bash
-# 对已完成的功能生成并执行 E2E 测试
-/lc-feat:e2e 3.37-bargain
-```
-
-### 4.3 手动执行已有测试
-
-```bash
-# 跑全部测试
-cd tests/e2e && npx playwright test
-
-# 跑单个文件
-cd tests/e2e && npx playwright test specs/demo.spec.ts
-
-# 只跑上次失败的
-cd tests/e2e && npx playwright test --last-failed
-
-# 带浏览器界面调试
-cd tests/e2e && npx playwright test --headed
-
-# 查看 HTML 报告
-cd tests/e2e && npx playwright show-report report
-```
-
----
-
-## 五、测试生成规则
-
-### 5.1 AI 如何生成测试
-
-当执行 `/lc-feat:e2e <feat-name>` 时，AI 会：
-
-1. **读取需求和设计文档**
-   - `docs/pipeline/{feat-name}/requirement.md`
-   - `docs/pipeline/{feat-name}/design.md`
-   - 功能涉及的源代码文件
-
-2. **提取测试要素**
-   - 页面路由（path + 参数）
-   - 用户操作流程（按钮、表单、弹窗）
-   - 预期结果（toast、跳转、数据变化）
-   - 接口依赖（需要等待的 API）
-
-3. **按需求类型确定测试重点**
-
-| 需求类型 | 测试重点 |
-|---------|----------|
-| 新页面 | 页面加载 + 主流程走通 + 关键交互截图 |
-| 功能扩展 | 新增功能路径 + 原有功能不受影响 |
-| 表单/弹窗 | 打开/填写/提交/关闭全流程 |
-| 列表/搜索 | 加载/搜索/分页/空数据 |
-
-4. **生成测试文件** → `tests/e2e/specs/{feat-name}.spec.ts`
-
-### 5.2 测试文件命名
-
-```
-tests/e2e/specs/
-├── demo.spec.ts           # 基础验证（常驻）
-├── 3.37-bargain.spec.ts   # 功能：商品议价
-├── 3.38-coupon.spec.ts    # 功能：优惠券
-└── ...
-```
-
----
-
-## 六、选择器与等待策略
-
-### 6.1 选择器优先级（从高到低）
+### 5.1 选择器优先级（从高到低）
 
 | 优先级 | 方式 | 示例 | 稳定性 |
 |--------|------|------|--------|
@@ -251,11 +175,11 @@ tests/e2e/specs/
 | 2 | `getByText` | `page.getByText('操作成功')` | 高 |
 | 3 | `getByPlaceholder` | `page.getByPlaceholder('请输入价格')` | 高 |
 | 4 | `getByTestId` | `page.getByTestId('bargain-form')` | 中 |
-| 5 | `locator` | `page.locator('.van-button--primary')` | 低 |
+| 5 | `locator(CSS)` | `page.locator('.van-button--primary')` | 低（最后手段）|
 
-**禁止**：脆弱 XPath、深层级 CSS 选择器
+**禁止**：脆弱 XPath、深层级 CSS。
 
-### 6.2 等待策略
+### 5.2 等待策略
 
 | 场景 | 正确做法 | 禁止 |
 |------|---------|------|
@@ -263,19 +187,19 @@ tests/e2e/specs/
 | API 请求 | `await page.waitForResponse('**/api/xxx')` | 硬编码延时 |
 | 元素出现 | `await expect(locator).toBeVisible()` | `sleep(1000)` |
 | 路由跳转 | `await page.waitForURL('/target')` | 轮询 URL |
-| 动画完成 | `await expect(locator).toBeVisible()` | `waitForTimeout(300)` |
+| 动画完成 | `await expect(locator).toBeVisible()` | `waitForTimeout(300)`（仅动画兜底可破例）|
 
 ---
 
-## 七、截图策略
+## 六、截图策略
 
-### 7.1 核心原则
+### 6.1 核心原则
 
-- `playwright.config.ts` 的 `screenshot` 设为 `'off'`（不自动截图）
-- 由测试代码通过 `page.screenshot()` **手动控制**截图时机
-- 每个测试用例必须包含截图
+- config 的 `screenshot` 设为 `'off'`，由测试代码 `page.screenshot()` **手动控制**时机。
+- 每个用例必须包含截图，使用 `fullPage: true`。
+- 路径用 `path.resolve` + `path.join` 拼**绝对路径**，按功能隔离目录。
 
-### 7.2 截图时机
+### 6.2 截图时机
 
 | 时机 | 说明 |
 |------|------|
@@ -284,443 +208,352 @@ tests/e2e/specs/
 | 操作完成后 | toast 出现、弹窗关闭 |
 | 异常状态 | 空数据、错误提示 |
 
-### 7.3 截图路径规则
+### 6.3 路径规则
 
 ```typescript
-import path from 'path';
+import path from 'path'
 
-// screenshotDir 基于 specs/ 目录相对定位
-const screenshotDir = path.resolve(__dirname, '../results/screenshots/{feat-name}');
+const screenshotDir = path.resolve(__dirname, '../results/screenshots/{feat-name}')
 
-// 截图命名格式：{用例简称}-{序号}-{描述}.png
 await page.screenshot({
-    path: path.join(screenshotDir, '主流程-01-页面加载.png'),
+    path: path.join(screenshotDir, '主流程-01-页面加载.png'), // {用例简称}-{序号}-{描述}.png
     fullPage: true,
-});
-```
-
-### 7.4 截图目录结构
-
-```
-tests/e2e/results/screenshots/
-├── 3.37-bargain/
-│   ├── 主流程-01-页面加载.png
-│   ├── 主流程-02-打开弹窗.png
-│   ├── 主流程-03-提交成功.png
-│   └── 异常-01-空价格提示.png
-└── 3.38-coupon/
-    └── ...
+})
 ```
 
 ---
 
-## 八、失败诊断与自动修复
+## 七、哪些适合 E2E、哪些不适合
 
-### 8.1 AI 诊断流程
+E2E 不是越多越好——**有些场景天然不适合自动化**，硬测只会产出脆弱、误报的用例。无论手动还是自动生成，落用例前都先按下表判断：
+
+| 标签 | 判定 | 处理 |
+|------|------|------|
+| ✅ 可 E2E | 页面加载 / 路由跳转 / 表单填写提交 / 列表加载搜索 / 可见 UI 断言 | 写成用例 |
+| 🔒 需登录 | 受登录态保护的页面或操作 | 准备测试 token（注入 localStorage）后再写；否则跳过并标注 |
+| 🧩 需 mock | JSBridge / 原生能力 / 三方回调（App 内分享、关闭 WebView 等） | 不在 E2E 里测，记录说明 |
+| ⬜ 不可 E2E | KeepAlive 缓存、IndexedDB/DexieDB、SSR 请求参数、"控制台无重复请求"等白盒断言 | 改用单测 |
+
+> 这是通用原则。配合 lc-feat 自动生成时，skill 会自动按此打标分流（见 §十五）。
+
+---
+
+## 八、失败诊断与修复
+
+### 8.1 诊断流程
 
 ```
-测试执行 → 有失败
-    ↓
-读取失败截图 + 错误信息
-    ↓
-判断类型：测试问题 or 功能 Bug
-    ↓
-├── 测试问题 → 自动修复 → 重跑（最多 3 轮）
-└── 功能 Bug → 记录到报告 → 等待人工确认
+执行 → 有失败 → 读失败截图 + 错误信息 → 判断类型
+  ├── 测试问题（选择器/时序）→ 修测试代码 → 重跑
+  └── 功能 Bug → 记录 → 等人工确认（不改源码）
 ```
 
 ### 8.2 错误类型判断表
 
-| 错误信息 | 类型 | AI 处理 |
-|---------|------|---------|
-| `Timeout waiting for locator` | 选择器/时序 | 自动修复选择器或加等待 |
+| 错误信息 | 类型 | 处理 |
+|---------|------|------|
+| `Timeout waiting for locator` | 选择器/时序 | 修选择器或加等待 |
 | `expect(received).toBe(expected)` | 数据断言 | 可能是功能 Bug |
 | `waitForURL timeout` | 路由未跳转 | 可能是功能 Bug |
 | `Element is not visible` | 元素遮挡 | 检查 z-index / v-if |
-| `net::ERR_CONNECTION_REFUSED` | 服务未启动 | 提示启动 dev server |
-| `Execution context was destroyed` | 页面重新导航 | 加 networkidle 等待 |
+| `net::ERR_CONNECTION_REFUSED` | 服务未启动 | 检查 webServer / dev server |
+| `Execution context was destroyed` | 页面重新导航 | 加 `networkidle` 等待 |
+| `Executable doesn't exist at .../chromium_*` | 浏览器内核缺失/版本不符 | 重跑 `npx playwright install chromium` |
 
-### 8.3 自动修复边界
+### 8.3 修复边界
 
-**AI 会自动修复的**（测试代码问题）：
-- 选择器文本与实际 DOM 不一致
-- 缺少等待（异步请求未完成就断言）
-- 截图路径错误
-
-**AI 不会自动修改的**（功能 Bug）：
-- 按钮点击无响应
-- 表单提交后数据未更新
-- 路由跳转逻辑错误
-- API 请求参数错误
+- **可改**（测试代码问题）：选择器文本不符、缺等待、截图路径错。
+- **不改**（功能 Bug）：点击无响应、提交后数据未更新、路由逻辑错、API 参数错 —— 记录待人工确认。
 
 ---
 
-## 九、Vue3 vs Nuxt3 差异
+## 九、框架差异：SPA（Vite）vs SSR（Nuxt）
 
-| 项目 | Vue3 + Vite (kejinshou_m) | Nuxt3 (h5-nuxt) |
-|------|---------------------------|-----------------|
-| 启动命令 | `npm run start:dev` | `npm run dev` |
-| 默认端口 | 9241 | 3000 |
-| 路由模式 | history（vue-router） | history（文件系统路由） |
-| SSR | 无 | 有，需等 hydration |
-| 页面加载等待 | `waitForLoadState('networkidle')` | `waitForLoadState('networkidle')` + hydration |
-| 数据获取 | 接口请求（mwpRequest） | `useAsyncData` / `useFetch` |
-| 环境变量 | `VITE_*` | `NUXT_*` |
+| 项 | SPA（Vue3 + Vite，如 kejinshou_m） | SSR（Nuxt3，如 h5-nuxt） |
+|----|-----------------------------------|--------------------------|
+| 启动命令 | `npm run start:dev` | `pnpm start:dev`（= `nuxt dev`）|
+| 默认端口（举例） | 9241 | 9158 |
+| 路由 | history（vue-router） | 文件系统路由（以项目实际路由配置为准）|
+| 渲染 | 纯客户端 | 服务端渲染 + 客户端 hydration |
+| 页面就绪 | `waitForLoadState('networkidle')` | `networkidle` 后还需等 hydration 才可交互 |
+| 数据获取 | 客户端请求 | `useAsyncData` / `useFetch`（SSR 首屏已含数据）|
+| 环境变量 | `VITE_*` | `NUXT_*`（如 `NUXT_PUBLIC_*`）|
+| webServer timeout | 60s | ≥120s（冷启慢）|
 
-### Nuxt3 SSR 特有注意
+### SSR 特有注意
 
 ```typescript
-// Nuxt3 必须等 hydration 完成，否则点击可能无效
-await page.goto('/page');
-await page.waitForLoadState('networkidle');
-// hydration 完成后元素才可交互
-await expect(page.getByRole('button', { name: '提交' })).toBeEnabled();
+await page.goto('/page')
+await page.waitForLoadState('networkidle')
+// hydration 完成后元素才真正可交互，用可交互断言确认
+await expect(page.getByRole('button', { name: '提交' })).toBeEnabled()
 ```
+
+> ⚠️ **与单测框架隔离**：主工程若用 Vitest，其默认匹配 `*.spec.ts`，会误抓 `tests/e2e` 下的 Playwright spec。需在 `vitest.config.ts` 的 `test.exclude` 加 `'tests/e2e/**'`。
 
 ---
 
 ## 十、H5 移动端专项
 
-### 10.1 Vant 组件交互
+### 10.1 Vant 等组件交互
 
 ```typescript
 // Toast — 出现即截图+断言（很快消失）
-await page.getByRole('button', { name: '提交' }).click();
-await expect(page.getByText('提交成功')).toBeVisible();
-await page.screenshot({ path: '...toast.png', fullPage: true });
+await page.getByRole('button', { name: '提交' }).click()
+await expect(page.getByText('提交成功')).toBeVisible()
+await page.screenshot({ path: '...toast.png', fullPage: true })
 
 // Popup 弹窗 — 等 transition 动画完成
-await page.getByText('打开弹窗').click();
-await expect(page.locator('.van-popup')).toBeVisible();
-// 等动画结束再截图
-await page.waitForTimeout(300); // 仅此处允许短暂等待动画
-await page.screenshot({ path: '...popup.png', fullPage: true });
-
-// Dialog 确认框
-await expect(page.locator('.van-dialog')).toBeVisible();
-await page.getByRole('button', { name: '确认' }).click();
+await page.getByText('打开弹窗').click()
+await expect(page.locator('.van-popup')).toBeVisible()
+await page.waitForTimeout(300) // 仅此处允许短暂等待动画
+await page.screenshot({ path: '...popup.png', fullPage: true })
 ```
 
 ### 10.2 移动端手势
 
 ```typescript
-// 下拉刷新
-await page.touchscreen.swipe(200, 200, 200, 500);
-await page.waitForResponse('**/api/list');
-
-// 上滑加载更多
-await page.touchscreen.swipe(200, 600, 200, 100);
-await page.waitForResponse('**/api/list?page=2');
+await page.touchscreen.swipe(200, 200, 200, 500)   // 下拉刷新 / 上滑加载
+await page.waitForResponse('**/api/list')
 ```
 
 ### 10.3 软键盘处理
 
 ```typescript
-// 操作 input 前先滚动到可视区域
-const input = page.getByPlaceholder('请输入价格');
-await input.scrollIntoViewIfNeeded();
-await input.fill('100');
+const input = page.getByPlaceholder('请输入价格')
+await input.scrollIntoViewIfNeeded()  // 操作前先滚到可视区
+await input.fill('100')
 ```
 
 ---
 
 ## 十一、常见坑与解决方案
 
-### 坑 1：Vant Toast 转瞬即逝
-
+**坑 1：Vant Toast 转瞬即逝**
 ```typescript
-// 错误：Toast 消失了才断言
-await page.click('button');
-await page.waitForTimeout(2000);  // ❌ Toast 已消失
-expect(page.getByText('成功')).toBeVisible();
-
-// 正确：点击后立即断言
-await page.click('button');
-await expect(page.getByText('成功')).toBeVisible();  // ✅
+// ❌ 等待后 Toast 已消失
+await page.click('button'); await page.waitForTimeout(2000)
+expect(page.getByText('成功')).toBeVisible()
+// ✅ 点击后立即断言
+await page.click('button')
+await expect(page.getByText('成功')).toBeVisible()
 ```
 
-### 坑 2：Popup 动画未完成就截图
-
+**坑 2：接口未完成就断言** —— `Promise.all` 同时触发导航与等响应：
 ```typescript
-// 正确：等 Popup 可见后再截图
-await page.getByText('打开').click();
-await expect(page.locator('.van-popup')).toBeVisible();
-await page.screenshot({ ... });
-```
-
-### 坑 3：接口请求未完成就断言
-
-```typescript
-// 正确：等 API 返回后再断言列表
 await Promise.all([
     page.waitForResponse('**/api/goods/list'),
     page.goto('/goods/list'),
-]);
-await expect(page.getByTestId('goods-item').first()).toBeVisible();
+])
+await expect(page.getByTestId('goods-item').first()).toBeVisible()
 ```
 
-### 坑 4：登录态丢失
-
+**坑 3：登录态丢失** —— `addInitScript` 注入 token（键名按项目实际，可能带环境前缀）：
 ```typescript
-test.beforeEach(async ({ page }) => {
-    // 注入 token 模拟登录态
-    await page.evaluate(() => {
-        localStorage.setItem('token', 'test-token-xxx');
-    });
-});
+await context.addInitScript((token) => {
+    localStorage.setItem('<token-key>', token)  // 如 'user:kjs-token' 或 'test4j-user:kjs-token'
+}, process.env.E2E_TOKEN)
 ```
 
-### 坑 5：路由带参数
+**坑 4：HMR 干扰** —— 测试期间不要编辑源码，或用构建产物预览模式跑。
 
-```typescript
-// kejinshou_m 路由示例
-await page.goto('/goods/detail?id=123&gameId=456');
-await page.waitForLoadState('networkidle');
-```
-
-### 坑 6：HMR 热更新干扰
-
-开发模式下代码保存会触发 HMR，导致测试中途页面刷新。解决方案：
-- 测试期间不要编辑源���码
-- 或使用 `npm run build && npm run serve` 静态预览模式
+**坑 5：浏览器版本不符** —— 升级 `@playwright/test` 后必跑 `npx playwright install chromium`（见 §3.1）。
 
 ---
 
 ## 十二、测试模板
 
-### 12.1 基础模板（kejinshou_m 适用）
+> **项目无关**模板，示例路由/选择器按项目实际替换。
+
+### 12.1 基础模板
 
 ```typescript
-import { test, expect } from '@playwright/test';
-import path from 'path';
+import { test, expect } from '@playwright/test'
+import path from 'path'
 
-const screenshotDir = path.resolve(__dirname, '../results/screenshots/{feat-name}');
+const screenshotDir = path.resolve(__dirname, '../results/screenshots/{feat-name}')
 
 test.describe('{功能名称}', () => {
-    test.beforeEach(async ({ page }) => {
-        // 如需登录态
-        await page.evaluate(() => {
-            localStorage.setItem('token', 'test-token');
-        });
-    });
+    test.beforeEach(async ({ context }) => {
+        // 如需登录态（键名按项目实际）
+        // await context.addInitScript((t) => localStorage.setItem('<token-key>', t), process.env.E2E_TOKEN)
+    })
 
     test('主流程：{流程描述}', async ({ page }) => {
-        // 1. 进入页面
-        await page.goto('/{route-path}');
-        await page.waitForLoadState('networkidle');
-        await page.screenshot({
-            path: path.join(screenshotDir, '主流程-01-页面加载.png'),
-            fullPage: true,
-        });
+        await page.goto('/{route-path}')
+        await page.waitForLoadState('networkidle')
+        await page.screenshot({ path: path.join(screenshotDir, '主流程-01-页面加载.png'), fullPage: true })
 
-        // 2. 执行操作
-        await page.getByRole('button', { name: '操作按钮' }).click();
-        await page.screenshot({
-            path: path.join(screenshotDir, '主流程-02-操作后.png'),
-            fullPage: true,
-        });
+        await page.getByRole('button', { name: '操作按钮' }).click()
+        await page.screenshot({ path: path.join(screenshotDir, '主流程-02-操作后.png'), fullPage: true })
 
-        // 3. 验证结果
-        await expect(page.getByText('操作成功')).toBeVisible();
-        await page.screenshot({
-            path: path.join(screenshotDir, '主流程-03-操作成功.png'),
-            fullPage: true,
-        });
-    });
+        await expect(page.getByText('操作成功')).toBeVisible()
+        await page.screenshot({ path: path.join(screenshotDir, '主流程-03-操作成功.png'), fullPage: true })
+    })
 
     test('异常：{异常场景}', async ({ page }) => {
-        await page.goto('/{route-path}');
-        await page.waitForLoadState('networkidle');
-
-        // 触发异常
-        await page.getByRole('button', { name: '提交' }).click();
-
-        // 验证错误提示
-        await expect(page.getByText('请填写必填项')).toBeVisible();
-        await page.screenshot({
-            path: path.join(screenshotDir, '异常-01-空表单提交.png'),
-            fullPage: true,
-        });
-    });
-});
+        await page.goto('/{route-path}')
+        await page.waitForLoadState('networkidle')
+        await page.getByRole('button', { name: '提交' }).click()
+        await expect(page.getByText('请填写必填项')).toBeVisible()
+        await page.screenshot({ path: path.join(screenshotDir, '异常-01-空表单提交.png'), fullPage: true })
+    })
+})
 ```
 
 ### 12.2 表单弹窗模板
 
 ```typescript
 test('弹窗表单提交', async ({ page }) => {
-    await page.goto('/goods/detail?id=123');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/{route-path}')
+    await page.waitForLoadState('networkidle')
 
-    // 打开弹窗
-    await page.getByRole('button', { name: '议价' }).click();
-    await expect(page.locator('.van-popup')).toBeVisible();
-    await page.screenshot({
-        path: path.join(screenshotDir, '议价-01-弹窗打开.png'),
-        fullPage: true,
-    });
+    await page.getByRole('button', { name: '打开' }).click()
+    await expect(page.locator('.van-popup')).toBeVisible()
 
-    // 填写表单
-    await page.getByPlaceholder('请输入期望价格').fill('500');
-    await page.getByPlaceholder('请输入留言').fill('诚心购买');
+    await page.getByPlaceholder('请输入期望价格').fill('500')
 
-    // 提交并等待 API 返回
     await Promise.all([
-        page.waitForResponse('**/api/bargain/submit'),
+        page.waitForResponse('**/api/<submit-endpoint>'),
         page.getByRole('button', { name: '确认提交' }).click(),
-    ]);
+    ])
 
-    // 验证提交成功
-    await expect(page.getByText('提交成功')).toBeVisible();
-    await page.screenshot({
-        path: path.join(screenshotDir, '议价-02-提交成功.png'),
-        fullPage: true,
-    });
-});
+    await expect(page.getByText('提交成功')).toBeVisible()
+    await page.screenshot({ path: path.join(screenshotDir, '提交-成功.png'), fullPage: true })
+})
 ```
 
 ### 12.3 列表搜索模板
 
 ```typescript
-test('搜索商品', async ({ page }) => {
-    await page.goto('/goods/list');
-    await page.waitForLoadState('networkidle');
-    await page.screenshot({
-        path: path.join(screenshotDir, '搜索-01-初始列表.png'),
-        fullPage: true,
-    });
+test('搜索', async ({ page }) => {
+    await page.goto('/{list-route}')
+    await page.waitForLoadState('networkidle')
 
-    // 输入搜索关键词
-    await page.getByPlaceholder('搜索商品').fill('王者荣耀');
+    await page.getByPlaceholder('搜索').fill('关键词')
     await Promise.all([
-        page.waitForResponse('**/api/goods/search**'),
-        page.getByRole('button', { name: '搜索' }).click(),
-    ]);
+        page.waitForResponse('**/api/<search-endpoint>**'),
+        page.keyboard.press('Enter'),
+    ])
 
-    // 验证搜索结果
-    await expect(page.getByTestId('goods-item')).toHaveCount(10);
-    await page.screenshot({
-        path: path.join(screenshotDir, '搜索-02-搜索结果.png'),
-        fullPage: true,
-    });
-});
+    await expect(page.getByTestId('list-item').first()).toBeVisible()
+    await page.screenshot({ path: path.join(screenshotDir, '搜索-结果.png'), fullPage: true })
+})
 ```
 
 ---
 
 ## 十三、报告产出
 
-### 13.1 E2E 报告文件
+### 13.1 内置报告（Playwright 原生）
 
-每次执行 `/lc-feat:e2e <feat-name>` 后生成：
+执行后自动生成 HTML / JSON 报告，无需额外工具：
 
+```bash
+cd tests/e2e && npx playwright show-report report   # 打开 HTML 报告
 ```
-docs/pipeline/{feat-name}/e2e-report.md
-```
 
-### 13.2 报告格式
+失败用例的 video / trace 也在 `results/` 下，`npx playwright show-trace <trace.zip>` 可逐帧回放。
+
+### 13.2 Markdown 汇总报告（可选）
+
+需要可读的归档报告时，建议结构如下（配合 lc-feat 自动生成，见 §十五）：
 
 ```markdown
 # {功能名称} E2E 测试报告
-
-## 测试日期: 2026-05-25
-## 测试框架: Playwright
-## 设备模拟: Pixel 5 (Mobile Chrome)
-
-## 测试概览
-- 测试用例: 4 个
-- 通过: 4 ✅
-- 失败: 0 ❌
-- 截图数量: 12 张
-- 执行耗时: 8.5s
-
-## 测试用例清单
-| 用例名称 | 状态 | 耗时 | 截图数 |
-|---------|------|------|--------|
-| ��流程：议价提交 | ✅ | 3.2s | 3 |
-| 异常：空价格提交 | ✅ | 1.8s | 2 |
-| 边界：最大价格 | ✅ | 2.1s | 2 |
-| 边界：重复提交 | ✅ | 1.4s | 2 |
-
-## 截图索引
-| 步骤 | 截图 | 说明 |
-|------|------|------|
-| 页面加载 | screenshots/3.37-bargain/主流程-01-页面加载.png | 商品详情页 |
-| 弹窗打开 | screenshots/3.37-bargain/主流程-02-弹窗打开.png | 议价弹窗 |
-| ... | ... | ... |
-```
-
-### 13.3 查看 HTML 报告
-
-```bash
-cd tests/e2e && npx playwright show-report report
+## 测试日期 / 框架 / 设备
+## 用例取舍（✅可E2E / 🔒需登录 / 🧩需mock / ⬜不可E2E 各计数）
+## 测试概览（用例数 / 通过 / 失败 / 截图数 / 耗时）
+## 测试用例清单（名称 / 状态 / 耗时 / 截图）
+## 截图索引 / 失败分析 / 发现的功能 Bug
 ```
 
 ---
 
-## 十四、日常命令速查
-
-### 开发阶段
+## 十四、命令速查
 
 ```bash
-# 检查环境是否就绪
-cd tests/e2e && npx playwright test --list
+# 环境
+cd tests/e2e && npx playwright test --list           # 检查环境/列用例
+cd tests/e2e && npx playwright install chromium       # 装/补浏览器内核
+rm -rf ~/Library/Caches/ms-playwright/__dirlock       # 清并发安装锁
 
-# 执行所有测试
-cd tests/e2e && npx playwright test
+# 执行
+cd tests/e2e && npx playwright test                   # 跑全部
+cd tests/e2e && npx playwright test specs/x.spec.ts   # 跑单个
+cd tests/e2e && npx playwright test --last-failed     # 重跑失败
+cd tests/e2e && npx playwright test --headed          # 带界面调试
+cd tests/e2e && npx playwright test --ui              # UI 交互模式
 
-# 执行单个文件
-cd tests/e2e && npx playwright test specs/3.37-bargain.spec.ts
-
-# 重跑上次失败
-cd tests/e2e && npx playwright test --last-failed
-
-# 带浏览器界面调试
-cd tests/e2e && npx playwright test --headed
-
-# 查看报告
-cd tests/e2e && npx playwright show-report report
+# 报告
+cd tests/e2e && npx playwright show-report report      # 看 HTML 报告
+cd tests/e2e && npx playwright show-trace <trace.zip>  # 回放 trace
 ```
 
-### lc-feat Pipeline 中
+> lc-feat 自动生成相关命令见 §十五。
+
+---
+
+## 十五、（可选）与 lc-feat 流水线配合使用
+
+> 本节是**可选增强**。不用 lc-feat 时，前十四节已足够独立完成 E2E。
+
+把"读文档 → 生成用例 → 执行 → 出报告"自动化，用 `lc-feat:e2e` skill。
+
+### 15.1 流水线中的位置
+
+```
+requirement → design → implement → verify → 【e2e】   ← 流水线最后一步
+```
+
+环境未就绪时自动 `skipped`，不阻断流程。
+
+### 15.2 双驱动模式
+
+`/lc-feat:e2e <feat-name> [doc-path]` 自动判定生成依据：
 
 ```bash
-# 完整流水线
-/lc-feat:pipeline 3.37-bargain
+# 模式 A —— 需求+设计驱动（存在 docs/pipeline/{feat}/requirement.md + design.md 时）
+/lc-feat:e2e <feat-name>
 
-# 只跑 E2E
-/lc-feat:e2e 3.37-bargain
+# 模式 B —— 现有文档驱动（显式指定一份文档作为测试依据）
+/lc-feat:e2e <feat-name> docs/<任意路径>/测试要点.md
 
-# 从 E2E 步骤恢复
-/lc-feat:pipeline 3.37-bargain --from=e2e
+# 模式 B —— 不传文档，自动发现现有文档（测试要点 / 模块文档）
+/lc-feat:e2e <feat-name>
 ```
 
-### 环境问题排查
+**判定优先级**：显式 `doc-path` → pipeline 文档 → 自动发现 `docs/**/*测试要点*.md`、模块文档 → 兜底 `git diff <base-branch>` + 源码。
+
+> **「测试要点」式用例表**（含「操作 / 预期结果」列）是模式 B 最优来源——逐条映射：`操作`→action，`预期结果`→assert。
+
+### 15.3 自动用例分流
+
+生成前 skill 会自动按 [§七](#七哪些适合-e2e哪些不适合) 的标准对每条用例打标，只生成可 E2E 的，其余写入报告说明，避免脆弱误报用例。
+
+### 15.4 相关命令
 
 ```bash
-# Chromium 未安装
-cd tests/e2e && npx playwright install chromium
-
-# 查看已安装浏览器
-npx playwright install --dry-run
-
-# Dev server 未启动（通常不需要手动启动，config 会自动处理）
-npm run start:dev
+/lc-feat:e2e <feat-name>                  # 自动判定模式生成 + 执行
+/lc-feat:e2e <feat-name> <doc-path>       # 指定文档驱动
+/lc-feat:pipeline <feat-name> --from=e2e  # 流水线从 e2e 步恢复
 ```
+
+> 生成逻辑细节见 `lc-feat-e2e/SKILL.md`，流水线集成见 `lc-feat-pipeline-guide.md` §4.5。
 
 ---
 
 ## 附录：快速检查清单
 
-在执行 E2E 测试前确认：
+执行 E2E 前确认：
 
-- [x] `tests/e2e/node_modules/@playwright/test` 已安装
-- [x] `npx playwright install chromium` 已执行
-- [x] `tests/e2e/playwright.config.ts` 配置正确（端口、设备）
-- [x] `tests/e2e/.gitignore` 忽略了 `node_modules/`、`results/`、`report/`
-- [ ] Dev server 已启动（或 config 中 webServer 会自动启动）
-- [ ] 需求/设计文档存在于 `docs/pipeline/{feat-name}/`（Pipeline 模式需要）
+- [ ] `tests/e2e/` 为独立子工程（自带 `package.json`），`@playwright/test` 已安装
+- [ ] `npx playwright install chromium` 已执行（升级后需重跑）
+- [ ] `playwright.config.ts` 的 `baseURL` / `webServer.command` / `timeout` / 设备已按项目填对（见 §4.2 矩阵）
+- [ ] `tests/e2e/.gitignore` 忽略 `node_modules/`、`results/`、`report/`
+- [ ] 主工程若用 Vitest，已在 `test.exclude` 排除 `tests/e2e/**`
+- [ ] 需登录的用例已准备测试 token（`tests/e2e/.env`，gitignore）
 
 ---
 
-*基于 vue3-nuxt3-claude-test-workflow v1.1 + lc-feat-e2e v0.0.3 整合*
+*项目无关通用版（核心独立可用）· lc-feat 集成为可选项（§十五）。*

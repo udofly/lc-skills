@@ -1,10 +1,10 @@
 ---
 name: lc-feat-e2e
-description: E2E 端到端测试技能。根据需求文档和设计文档生成 Playwright E2E 测试，在真实浏览器中验证页面交互，保存截图。当用户说"E2E测试"、"端到端测试"、"浏览器测试"、"跑一下页面"时触发。
+description: E2E 端到端测试技能。两种驱动模式——A 需求+设计驱动（流水线 requirement.md+design.md）、B 现有文档驱动（测试要点/模块文档/指定文档路径，不依赖流水线）——生成 Playwright E2E 测试，在真实浏览器中验证页面交互，保存截图。当用户说"E2E测试"、"端到端测试"、"浏览器测试"、"跑一下页面"、"基于文档生成测试"时触发。
 license: MIT
 metadata:
   author: kejinshou-team
-  version: "0.0.3"
+  version: "0.0.4"
   pipeline_guide: "~/.claude/skills/docs/lc-feat-pipeline-guide.md"
 ---
 
@@ -14,7 +14,14 @@ metadata:
 
 ---
 
-**Input**: `/lc-feat:e2e <feat-name>`
+**Input**: `/lc-feat:e2e <feat-name> [doc-path]`
+
+支持两种驱动模式（在 Step 2 自动判定）：
+
+- **模式 A — 需求+设计驱动**：从 lc-feat 流水线产物 `requirement.md` + `design.md` 生成。适合走流水线开发的新功能。
+- **模式 B — 现有文档驱动**：从项目**已有文档**（测试要点文档 / 模块文档 / 显式指定的 `doc-path`）生成，**不依赖流水线**。适合已有文档但未走流水线的功能或老页面。
+
+两种模式入口不同、后续流程（用例分流 → 生成 → 执行 → 报告）完全共用。
 
 **Steps**
 
@@ -36,20 +43,46 @@ metadata:
 
    > **注意**：不需要手动检测 dev server。`playwright.config.ts` 已配置 `webServer`，Playwright 会自动检测并启动开发服务器。
 
-2. **加载需求和设计文档**
+2. **确定测试依据（双模式自动判定）**
 
-   并行读取：
-   - `docs/pipeline/{feat-name}/requirement.md` — 功能需求（测试依据）
-   - `docs/pipeline/{feat-name}/design.md` — 技术设计（路由、页面结构、组件交互）
-   - 功能涉及的源代码文件（从 design.md 的文件清单或 `git diff --name-only master` 获取）
+   按以下优先级判定模式与文档来源：
 
-   从中提取：
-   - **页面路由**：需要访问哪些页面（path + 参数）
+   | 优先级 | 条件 | 模式 | 文档来源 |
+   |--------|------|------|----------|
+   | ① | 命令传入了 `[doc-path]` | **B 现有文档驱动** | 该指定文档 |
+   | ② | `docs/pipeline/{feat-name}/requirement.md` + `design.md` 存在 | **A 需求+设计驱动** | 这两个文档 |
+   | ③ | 自动发现到现有文档 | **B 现有文档驱动** | 见下方「自动发现顺序」 |
+   | ④ | 以上都没有 | **兜底** | `git diff --name-only master` + 源码 |
+
+   **现有文档自动发现顺序**（命中即用，可命中多个则合并）：
+   1. `docs/**/*测试要点*.md`、`docs/**/*test*.md` — **已是用例表（操作/预期结果），最优来源**
+   2. `docs/**/modules/{页面目录}/*.md`、`docs/**/{feat-name}/*.md` — 模块/功能文档
+   3. `docs/**/{feat-name}*.md` — 其它命名匹配的功能文档
+
+   **统一提取**（两模式一致，源代码始终作为补充依据）：
+   - **页面路由**：需要访问哪些页面（path + 参数），**以 `app/router.options.ts` 为准**（文件路径 ≠ URL）
    - **用户操作流程**：按钮点击、表单填写、弹窗交互
    - **预期结果**：toast 提示、页面跳转、数据变化
    - **接口依赖**：哪些 API 请求需要等待
 
+   > **模式 B 提示**：若来源是「测试要点」式用例表（含 `操作 / 预期结果` 列），逐条直接映射 —— `操作` → Playwright action，`预期结果` → assert，每条用例对应一个 `test()`。
+   >
+   > 开始生成前，**简要回显本次判定的模式与文档来源**，便于用户确认。
+
 3. **制定测试策略**
+
+   ### 3.0 用例分流（必做，尤其模式 B）
+
+   文档（特别是「测试要点」表）里**并非每条都能自动 E2E**。先对提取出的每条用例打标，**只为「✅ 可 E2E」生成用例**，其余记入报告并说明原因，**禁止把不可自动化的用例硬写成会误报的脆弱断言**：
+
+   | 标签 | 判定 | 处理 |
+   |------|------|------|
+   | ✅ 可 E2E | 纯页面加载 / 路由跳转 / 表单填写提交 / 列表加载搜索 / 可见 UI 断言 | 生成 `test()` |
+   | 🔒 需登录 | 访问受登录态保护的页面或操作 | 有 token fixture 则生成；否则记为 `skipped`，报告标注「需测试 token」 |
+   | 🧩 需 mock | JSBridge / 原生能力 / 三方平台回调（如 App 内分享、关闭 WebView） | 不生成，记入报告 |
+   | ⬜ 不可 E2E | KeepAlive 缓存、IndexedDB/DexieDB、SSR 请求参数、控制台无重复请求等白盒断言 | 不生成，记入报告，建议改用单测 |
+
+   分流结果在报告的「用例分流」小节列出统计（各标签数量），让覆盖范围透明。
 
    根据需求类型确定 E2E 测试范围：
 
@@ -187,6 +220,16 @@ metadata:
    ## 测试日期: {YYYY-MM-DD}
    ## 测试框架: Playwright
    ## 设备模拟: Pixel 5 (Mobile Chrome)
+   ## 驱动模式: {A 需求+设计驱动 / B 现有文档驱动}
+   ## 文档来源: {requirement.md+design.md / 具体文档路径}
+
+   ## 用例分流
+   | 标签 | 数量 | 说明 |
+   |------|------|------|
+   | ✅ 可 E2E | {N} | 已生成用例 |
+   | 🔒 需登录 | {N} | {已生成/skipped：缺测试 token} |
+   | 🧩 需 mock | {N} | JSBridge / 原生能力，未生成 |
+   | ⬜ 不可 E2E | {N} | 白盒断言（KeepAlive/DexieDB/SSR），建议单测 |
 
    ## 测试概览
    - 测试用例: {N} 个
@@ -224,6 +267,8 @@ metadata:
 
 **Guardrails**
 - **必须先检测 Playwright 环境和 dev server**，未就绪不执行
+- **生成前回显驱动模式与文档来源**（模式 A / B + 具体文档），让覆盖范围对用户透明
+- **必做用例分流**：不可自动化的用例（需 mock / 白盒断言）记入报告，**禁止硬写成会误报的脆弱断言**；需登录的用例无 token 时记为 skipped
 - **每个测试用例必须包含截图**，截图路径使用绝对路径（`path.resolve` + `path.join`），不用相对路径
 - **截图目录按 feat-name 隔离**：`tests/e2e/results/screenshots/{feat-name}/`
 - 选择器优先用语义化方式（role > text > testid > CSS），禁止脆弱 XPath

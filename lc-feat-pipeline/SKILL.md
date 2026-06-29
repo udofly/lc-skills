@@ -170,7 +170,7 @@ metadata:
         |---------|-----------------|
         | h5-vue 项目（如 kejinshou_m） | `lc-kejinshou-h5-vue` |
         | h5-nuxt 项目 | `lc-kejinshou-h5-nuxt` |
-        | backend 后台项目（如 backend-kejinshou） | `lc-kejinshou-backend-page` |
+        | backend 后台项目（如 backend-kejinshou） | `lc-backend-page` |
      3. **必须使用 Skill tool 实际调用对应的项目 skill**，获取完整编码规范。**"已知规范内容"不能替代实际调用——必须产生一次 Skill tool call。**
      4. 编码时**严格遵循该 skill 定义的所有规范**（组件库、命名、Toast、Service 格式、取值方式等），规范优先级高于 implement skill 中的通用规范
      5. 如果 CLAUDE.md 未指定编码规范 skill，则根据项目目录结构自动匹配上述映射表中的 skill 并加载
@@ -263,7 +263,7 @@ metadata:
    > 注意：仅在所有步骤完成后执行，中途中断不写入。
 
 **Guardrails**
-- **【强制·阻断】编码阶段必须通过 Skill tool 实际调用项目对应的编码规范 skill**（h5-vue→`lc-kejinshou-h5-vue`，h5-nuxt→`lc-kejinshou-h5-nuxt`，backend→`lc-kejinshou-backend-page`），每次编码都必须产生一次 Skill tool call，不可凭记忆替代，未调用不得编码
+- **【强制·阻断】编码阶段必须通过 Skill tool 实际调用项目对应的编码规范 skill**（h5-vue→`lc-kejinshou-h5-vue`，h5-nuxt→`lc-kejinshou-h5-nuxt`，backend→`lc-backend-page`），每次编码都必须产生一次 Skill tool call，不可凭记忆替代，未调用不得编码
 - **流水线全程不执行任何 git 操作**（不 add、不 commit、不 push、不创建 PR）
 - git 操作由用户自行决定和执行
 - 每步完成必须暂停等待确认（lint 自动通过时除外），提示格式统一为 `y — 继续 / s — 跳过`

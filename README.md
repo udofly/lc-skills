@@ -11,7 +11,7 @@
 
 > 详细使用指南：[lc-feat-pipeline-guide.md](docs/lc-feat-pipeline-guide.md) (v1.5)
 > 
-> E2E 测试指南：[lc-feat-e2e-guide.md](docs/lc-feat-e2e-guide.md) (v1.0)
+> E2E 测试指南（项目无关、独立可用，lc-feat 集成为可选）：[lc-feat-e2e-guide.md](docs/lc-feat-e2e-guide.md) (v2.1)
 > 
 > 更新日志：[lc-feat-changelog.md](docs/lc-feat-changelog.md)
 > 
@@ -25,7 +25,7 @@
 | 2 | [lc-feat-design](lc-feat-design/SKILL.md) | 0.0.3 | `/lc-feat:design` | 技术设计（含自审），生成组件/路由/Service/权限设计文档 |
 | 3 | [lc-feat-implement](lc-feat-implement/SKILL.md) | 0.0.2 | `/lc-feat:implement` | 编码实现，按项目规范生成代码 |
 | 4 | [lc-feat-verify](lc-feat-verify/SKILL.md) | 0.0.1 | `/lc-feat:verify` | 代码验证（Lint + Test + QA 三阶段合并） |
-| 5 | [lc-feat-e2e](lc-feat-e2e/SKILL.md) | 0.0.3 | `/lc-feat:e2e` | E2E 测试，Playwright 浏览器验证 + 截图 |
+| 5 | [lc-feat-e2e](lc-feat-e2e/SKILL.md) | 0.0.4 | `/lc-feat:e2e` | E2E 测试，双驱动（需求+设计 / 现有文档），Playwright 浏览器验证 + 截图 |
 
 ### 独立步骤
 
@@ -56,7 +56,7 @@
 |-------|------|------|
 | [lc-kejinshou-h5-vue](lc-kejinshou-h5-vue/SKILL.md) | 1.1 | kejinshou_m H5 移动端规范（Vue 3 + Vant + Composition API） |
 | [lc-kejinshou-h5-nuxt](lc-kejinshou-h5-nuxt/SKILL.md) | 2.0 | h5-nuxt 项目规范 |
-| [lc-kejinshou-backend-page](lc-kejinshou-backend-page/SKILL.md) | - | backend-kejinshou 后台页面生成（KR36 + CRUD） |
+| [lc-backend-page](lc-backend-page/SKILL.md) | - | backend-kejinshou 后台页面生成（KR36 + CRUD） |
 | [lc-kejinshou-android](lc-kejinshou-android/SKILL.md) | 1.0 | kejinshou_android 原生项目规范 |
 | [lc-kr36-ui-guide](lc-kr36-ui-guide/skill.md) | - | kr36-ui 组件库 API 参考（KrForm/KrTable/KrDialog） |
 

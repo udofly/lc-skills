@@ -50,7 +50,7 @@ metadata:
       |---------|-----------------|
       | h5-vue 项目（如 kejinshou_m） | `lc-kejinshou-h5-vue` |
       | h5-nuxt 项目 | `lc-kejinshou-h5-nuxt` |
-      | backend 后台项目（如 backend-kejinshou） | `lc-kejinshou-backend-page` |
+      | backend 后台项目（如 backend-kejinshou） | `lc-backend-page` |
    4. 如果 CLAUDE.md 未指定，则根据项目目录结构（package.json、nuxt.config 等）自动匹配上述映射表中的 skill 并加载
    5. 如果映射表中没有匹配的项目类型，才通过读取 `package.json` 和 `src/` 目录结构自行判断
 
@@ -119,7 +119,7 @@ metadata:
    > "编码完成，生成/修改了以下文件：\n{文件列表}\n\n建议执行 `/lc-feat:verify {feat-name}` 进行代码验证。"
 
 **Guardrails**
-- **【强制·阻断】必须通过 Skill tool 实际调用项目对应的编码规范 skill**（h5-vue→`lc-kejinshou-h5-vue`，h5-nuxt→`lc-kejinshou-h5-nuxt`，backend→`lc-kejinshou-backend-page`），每次编码都必须产生一次 Skill tool call，不可凭记忆替代，未调用不得编码
+- **【强制·阻断】必须通过 Skill tool 实际调用项目对应的编码规范 skill**（h5-vue→`lc-kejinshou-h5-vue`，h5-nuxt→`lc-kejinshou-h5-nuxt`，backend→`lc-backend-page`），每次编码都必须产生一次 Skill tool call，不可凭记忆替代，未调用不得编码
 - **必须先检测项目类型**，使用对应的组件库、请求模式、路由模式
 - 必须遵循项目现有代码风格，不得引入新的模式
 - H5 项目不能使用 KrCard/KrTable 等后台组件，后台项目不能使用 Vant
