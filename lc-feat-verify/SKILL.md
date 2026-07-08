@@ -4,7 +4,7 @@ description: 代码验证技能。合并 Lint（静态检查+自动修复）、T
 license: MIT
 metadata:
   author: kejinshou-team
-  version: "0.0.1"
+  version: "0.0.2"
   pipeline_guide: "~/.claude/skills/docs/lc-feat-pipeline-guide.md"
 ---
 
@@ -20,12 +20,11 @@ metadata:
 
 1. **确定验证范围**
 
-   读取 `docs/pipeline/{feat-name}/design.md` 或 `requirement.md` 获取本次功能涉及的文件列表。
+   读取 `docs/pipeline/{feat-name}/spec.md`（需求与设计文档；旧版功能回退 `design.md` 或 `requirement.md`）获取本次功能涉及的文件列表。
    如果没有文档，通过 `git diff --name-only master` 获取变更文件列表。
 
    并行读取已有产出：
-   - `docs/pipeline/{feat-name}/requirement.md`
-   - `docs/pipeline/{feat-name}/design.md`（如存在）
+   - `docs/pipeline/{feat-name}/spec.md`（旧版功能：`requirement.md` + `design.md`）
    - 所有功能相关的源代码文件
 
 2. **加载项目编码规范**

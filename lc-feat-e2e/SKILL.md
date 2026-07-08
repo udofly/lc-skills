@@ -1,10 +1,10 @@
 ---
 name: lc-feat-e2e
-description: E2E 端到端测试技能。两种驱动模式——A 需求+设计驱动（流水线 requirement.md+design.md）、B 现有文档驱动（测试要点/模块文档/指定文档路径，不依赖流水线）——生成 Playwright E2E 测试，在真实浏览器中验证页面交互，保存截图。当用户说"E2E测试"、"端到端测试"、"浏览器测试"、"跑一下页面"、"基于文档生成测试"时触发。
+description: E2E 端到端测试技能。三种驱动模式——A 需求+设计驱动（配合流水线 spec.md，旧版 requirement.md+design.md）、B 现有文档驱动（测试要点/模块文档/指定文档路径，不依赖流水线）、C 测试用例驱动（从云效 Yunxiao MCP 读取测试用例库）——生成 Playwright E2E 测试，在真实浏览器中验证页面交互，保存截图。当用户说"E2E测试"、"端到端测试"、"浏览器测试"、"跑一下页面"、"基于文档生成测试"、"基于云效用例生成测试"时触发。
 license: MIT
 metadata:
   author: kejinshou-team
-  version: "0.0.4"
+  version: "0.0.6"
   pipeline_guide: "~/.claude/skills/docs/lc-feat-pipeline-guide.md"
 ---
 
@@ -14,14 +14,15 @@ metadata:
 
 ---
 
-**Input**: `/lc-feat:e2e <feat-name> [doc-path]`
+**Input**: `/lc-feat:e2e <feat-name> [doc-path] [--yunxiao <目录ID|用例ID>]`
 
-支持两种驱动模式（在 Step 2 自动判定）：
+支持三种驱动模式（在 Step 2 自动判定）：
 
-- **模式 A — 需求+设计驱动**：从 lc-feat 流水线产物 `requirement.md` + `design.md` 生成。适合走流水线开发的新功能。
-- **模式 B — 现有文档驱动**：从项目**已有文档**（测试要点文档 / 模块文档 / 显式指定的 `doc-path`）生成，**不依赖流水线**。适合已有文档但未走流水线的功能或老页面。
+- **模式 A — 需求+设计驱动（配合流水线）**：从 lc-feat 流水线产物 `spec.md`（需求与设计文档；旧版功能为 `requirement.md` + `design.md`）生成。适合走流水线开发的新功能。
+- **模式 B — 现有文档驱动（基于文档）**：从项目**已有文档**（测试要点文档 / 模块文档 / 显式指定的 `doc-path`）生成，**不依赖流水线**。适合已有文档但未走流水线的功能或老页面。
+- **模式 C — 测试用例驱动（基于云效用例）**：从**云效 Yunxiao MCP** 测试用例库读取用例（`preCondition` + `testSteps`），逐条映射成 E2E。适合 QA 已在云效维护用例的功能。命令带 `--yunxiao <目录ID|用例ID>` 时触发。
 
-两种模式入口不同、后续流程（用例分流 → 生成 → 执行 → 报告）完全共用。
+三种模式入口不同、后续流程（用例分流 → 生成 → 执行 → 报告）完全共用。
 
 **Steps**
 
@@ -43,16 +44,32 @@ metadata:
 
    > **注意**：不需要手动检测 dev server。`playwright.config.ts` 已配置 `webServer`，Playwright 会自动检测并启动开发服务器。
 
-2. **确定测试依据（双模式自动判定）**
+2. **确定测试依据（三模式自动判定）**
 
-   按以下优先级判定模式与文档来源：
+   按以下优先级判定模式与依据来源：
 
-   | 优先级 | 条件 | 模式 | 文档来源 |
+   | 优先级 | 条件 | 模式 | 用例来源 |
    |--------|------|------|----------|
-   | ① | 命令传入了 `[doc-path]` | **B 现有文档驱动** | 该指定文档 |
-   | ② | `docs/pipeline/{feat-name}/requirement.md` + `design.md` 存在 | **A 需求+设计驱动** | 这两个文档 |
-   | ③ | 自动发现到现有文档 | **B 现有文档驱动** | 见下方「自动发现顺序」 |
-   | ④ | 以上都没有 | **兜底** | `git diff --name-only master` + 源码 |
+   | ① | 命令带 `--yunxiao <目录ID\|用例ID>` | **C 测试用例驱动** | 云效 MCP 用例库，见下方「模式 C：云效用例读取」 |
+   | ② | 命令传入了 `[doc-path]` | **B 现有文档驱动** | 该指定文档 |
+   | ③ | `docs/pipeline/{feat-name}/spec.md` 存在（或旧版 `requirement.md` + `design.md`） | **A 需求+设计驱动** | spec.md（或旧版两个文档） |
+   | ④ | 自动发现到现有文档 | **B 现有文档驱动** | 见下方「自动发现顺序」 |
+   | ⑤ | 以上都没有 | **兜底** | `git diff --name-only master` + 源码 |
+
+   ### 模式 C：云效用例读取（Yunxiao MCP）
+
+   前置：云效 MCP 已配置（`~/.claude.json` 的 `mcpServers.yunxiao`，包 `alibabacloud-devops-mcp-server`）。**若新增配置后本会话无 `mcp__yunxiao__*` 原生工具**，可临时用 `npx -y alibabacloud-devops-mcp-server` 走 stdio RPC（initialize → tools/call）读取。
+
+   读取链路（已验证）：
+   1. `get_current_organization_info` → 拿 `organizationId`
+   2. `list_test_repos({organizationId, name})` → 按名字定位 `testRepoId`（**默认页只返回前几个，按 name 过滤更稳**）
+   3. `list_testcase_directories({organizationId, testRepoId})` → 目录树，取目标 `directoryId`
+   4. `search_testcases({organizationId, testRepoId, directoryId, page, perPage})` → 用例列表。**`directoryId` 必填，否则报「不能为空」**
+   5. `get_testcase({organizationId, testRepoId, testcaseId})` → 拿 `preCondition` + `testSteps.content[]{step, expected}`
+
+   逐条映射：`testSteps.content[].step` → Playwright action，`expected` → assert，`preCondition` → `beforeEach`/前置步骤，一条用例对应一个 `test()`。若用例标题带分流前缀（如 `[✅P0]`/`[🧩P1]`/`[⬜P2]`），直接据此分流。
+
+   > 氪金兽项目参考 ID（见记忆 `reference-yunxiao-mcp`）：org `62ac9a6364c8a06be2d5db5d`；用例库 氪金兽2.0=`d73b0e40233d3779c5c716b560`、ai测试库=`289032c822ff9cd561715c29da`。其它项目须先用 `list_test_repos` 查实际 ID。
 
    **现有文档自动发现顺序**（命中即用，可命中多个则合并）：
    1. `docs/**/*测试要点*.md`、`docs/**/*test*.md` — **已是用例表（操作/预期结果），最优来源**
@@ -220,8 +237,8 @@ metadata:
    ## 测试日期: {YYYY-MM-DD}
    ## 测试框架: Playwright
    ## 设备模拟: Pixel 5 (Mobile Chrome)
-   ## 驱动模式: {A 需求+设计驱动 / B 现有文档驱动}
-   ## 文档来源: {requirement.md+design.md / 具体文档路径}
+   ## 驱动模式: {A 需求+设计驱动 / B 现有文档驱动 / C 测试用例驱动}
+   ## 用例来源: {spec.md（旧版 requirement.md+design.md）/ 具体文档路径 / 云效用例库名+目录}
 
    ## 用例分流
    | 标签 | 数量 | 说明 |
@@ -267,7 +284,8 @@ metadata:
 
 **Guardrails**
 - **必须先检测 Playwright 环境和 dev server**，未就绪不执行
-- **生成前回显驱动模式与文档来源**（模式 A / B + 具体文档），让覆盖范围对用户透明
+- **生成前回显驱动模式与用例来源**（模式 A / B / C + 具体文档或云效库目录），让覆盖范围对用户透明
+- **模式 C（云效）**：`search_testcases` 必须带 `directoryId`；优先按用例标题分流前缀（✅/🔒/🧩/⬜）判定可自动化性；MWP 接口 mock 用网关 URL `**/h5/{apiKey}/1.0` 精确拦截，不打真实短信/账号
 - **必做用例分流**：不可自动化的用例（需 mock / 白盒断言）记入报告，**禁止硬写成会误报的脆弱断言**；需登录的用例无 token 时记为 skipped
 - **每个测试用例必须包含截图**，截图路径使用绝对路径（`path.resolve` + `path.join`），不用相对路径
 - **截图目录按 feat-name 隔离**：`tests/e2e/results/screenshots/{feat-name}/`

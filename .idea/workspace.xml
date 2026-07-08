@@ -5,29 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="329e5df7-a489-4fc6-97f4-79f3a86b4a8f" name="Changes" comment="feat(pipeline): 精简流水线步骤合并质量验证环节&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明">
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/antd-mini.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/component-patterns.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/components-catalog.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/page-patterns.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/request-layer.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/screenshot-to-page.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/templates.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-mp-taobao/references/utils-and-apis.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/lc-feat-changelog.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-changelog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/lc-feat-coding-standard-loading.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-coding-standard-loading.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/lc-feat-e2e-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-e2e-guide.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/lc-feat-pipeline-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-feat-pipeline-guide.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-document-release/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-document-release/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-e2e/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-e2e/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-implement/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-implement/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-pipeline/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-pipeline/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-feat-pr/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-feat-pr/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kejinshou-backend-page/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-backend-page/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +164,7 @@
       <workItem from="1779681481516" duration="7053000" />
       <workItem from="1780048684370" duration="1911000" />
       <workItem from="1780191224898" duration="516000" />
-      <workItem from="1782714048706" duration="1515000" />
+      <workItem from="1782714048706" duration="3019000" />
     </task>
     <task id="LOCAL-00001" summary="chore: 初始化项目配置并添加性能基准测试技能&#10;&#10;- 添加 .idea 相关配置文件到 gitignore&#10;- 创建 modules.xml 和 skills.iml 配置文件&#10;- 添加 benchmark 性能基准测试技能文档和实现&#10;- 添加 browse 浏览器自动化技能文档和实现&#10;- 配置技能的 preamble 执行逻辑&#10;- 设置性能监控和基线比较功能&#10;- 实现页面加载时间、核心网络指标检测&#10;- 添加资源大小和请求数量分析功能">
       <option name="closed" value="true" />
@@ -300,7 +278,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780054072288</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="feat(pipeline): 精简流水线步骤合并质量验证环节&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明">
+      <option name="closed" value="true" />
+      <created>1782722282624</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1782722282624</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
