@@ -15,12 +15,30 @@
 | lc-feat-verify | 0.0.1 | 2026-05-29 |
 | lc-feat-e2e | 0.0.4 | 2026-06-29 |
 | lc-feat-pr | 0.0.2 | 2026-05-25 |
-| lc-feat-document-release | 0.0.4 | 2026-05-25 |
+| lc-feat-document-release | 0.0.8 | 2026-07-13 |
 | lc-feat-api-sync | 0.0.2 | 2026-05-25 |
+| lc-doc-sync（伴生） | 0.0.2 | 2026-07-13 |
 
 ---
 
 ## 更新记录
+
+### 2026-07-13 — 文档更新账本 + lc-doc-sync 兜底同步
+
+**新增伴生 skill `lc-doc-sync`** v0.0.2（独立于 lc-feat 命名空间，与 document-release 协作）：
+- 按**时间/commit 粒度**兜底同步文档，捕捉绕过流水线的变更（hotfix、重构、他人合并）
+- 四种用法：增量（账本锚点→HEAD）/ `--since=<日期|commit>` / `--scan` 全局扫描 / `--check` 只报告不修改
+- 通用委托模式：运行时读项目技能「文档维护约定」，不硬编码项目路径
+- 使用指南：`lc-doc-sync-guide.md` v1.0
+
+**lc-feat-document-release** v0.0.5 → v0.0.8：
+- 新增 2.6「打戳与记账」：更新的文档打 frontmatter `updated`/`commit` 戳 + 向项目更新账本追加记录（不推进锚点，锚点归 lc-doc-sync）
+- 新增步骤 7「漏网变更检查」：收尾自动跑 `lc-doc-sync --check`（只读），总结中列出同期漏网变更
+- Guardrail：漏网检查只报告不顺手同步
+
+**配套约定**（首个接入项目 kejinshou_m）：
+- `lc-kejinshou-h5-vue` §16 升 v1.6：新增更新账本（`updates.md`）、frontmatter 时间戳、幂等/锚点规则、`docs/temp/` 临时文档区约定
+- 项目侧新增 `docs/kejinshou-h5-vue/updates.md`（账本）与 `doc-maintenance.md`（站内指南）
 
 ### 2026-06-29 — E2E 双驱动模式 + 用例分流
 

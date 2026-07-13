@@ -1,7 +1,7 @@
 # Claude Code Skills 清单
 
 > 全局安装目录：`~/.claude/skills/`
-> 最近更新：2026-05-29
+> 最近更新：2026-07-13
 
 ---
 
@@ -16,6 +16,8 @@
 > 更新日志：[lc-feat-changelog.md](docs/lc-feat-changelog.md)
 > 
 > 共享规范加载流程：[lc-feat-coding-standard-loading.md](docs/lc-feat-coding-standard-loading.md)
+> 
+> 文档时间同步指南（lc-doc-sync 伴生 skill + 更新账本约定）：[lc-doc-sync-guide.md](docs/lc-doc-sync-guide.md) (v1.0)
 
 ### 主流程（5 步）
 
@@ -37,8 +39,9 @@
 
 | Skill | 版本 | 命令 | 说明 |
 |-------|------|------|------|
-| [lc-feat-document-release](lc-feat-document-release/SKILL.md) | 0.0.4 | `/lc-feat:document-release` | 发布后文档处理，增量更新项目功能文档 + 归档 |
+| [lc-feat-document-release](lc-feat-document-release/SKILL.md) | 0.0.8 | `/lc-feat:document-release` | 发布后文档处理，增量更新项目功能文档 + 打戳记账 + 归档，收尾自动漏网检查 |
 | [lc-feat-api-sync](lc-feat-api-sync/SKILL.md) | 0.0.2 | `/lc-feat:api-sync` | 接口同步，Apifox 真实接口替换 mock |
+| [lc-doc-sync](lc-doc-sync/SKILL.md) | 0.0.2 | `/lc-doc-sync` | 文档时间同步（伴生），按账本锚点增量 / `--since` / `--scan` / `--check`，兜底绕过流水线的变更（[指南](docs/lc-doc-sync-guide.md)） |
 
 ### 总控
 
@@ -54,7 +57,7 @@
 
 | Skill | 版本 | 说明 |
 |-------|------|------|
-| [lc-kejinshou-h5-vue](lc-kejinshou-h5-vue/SKILL.md) | 1.1 | kejinshou_m H5 移动端规范（Vue 3 + Vant + Composition API） |
+| [lc-kejinshou-h5-vue](lc-kejinshou-h5-vue/SKILL.md) | 1.6 | kejinshou_m H5 移动端规范（Vue 3 + Vant + Composition API），§16 含文档维护约定（账本/时间戳/temp 区） |
 | [lc-kejinshou-h5-nuxt](lc-kejinshou-h5-nuxt/SKILL.md) | 2.0 | h5-nuxt 项目规范 |
 | [lc-backend-page](lc-backend-page/SKILL.md) | - | backend-kejinshou 后台页面生成（KR36 + CRUD） |
 | [lc-kejinshou-android](lc-kejinshou-android/SKILL.md) | 1.0 | kejinshou_android 原生项目规范 |
