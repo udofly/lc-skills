@@ -1,0 +1,2 @@
+checkpoint_file: /Users/gaochunfa/.claude/checkpoints/lc-cp-fixture-resume/20260710-101500-api-pagination.md
+current_branch: master

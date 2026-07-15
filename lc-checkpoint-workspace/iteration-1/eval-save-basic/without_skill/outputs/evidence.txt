@@ -1,0 +1,7 @@
+Files created to fulfill the task:
+- /tmp/lc-cp-fixture-save-baseline/docs/checkpoints/2026-07-14-登录重构.md
+
+git status --short in /tmp/lc-cp-fixture-save-baseline AFTER finishing:
+ M src/auth.ts
+A  src/session.ts
+?? docs/

@@ -1,0 +1,283 @@
+{
+  "metadata": {
+    "skill_name": "lc-checkpoint",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-07-14T08:12:41Z",
+    "evals_run": [
+      0,
+      1,
+      2
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 63.6,
+        "tokens": 35328,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "shows-master-checkpoints: \u5217\u8868\u5305\u542b\u5f53\u524d\u5206\u652f master \u7684 setup-ci \u548c perf-tuning",
+          "passed": true,
+          "evidence": "\u4e24\u6761\u5747\u5728\u8868\u4e2d\uff0c\u6309\u65f6\u95f4\u5012\u5e8f"
+        },
+        {
+          "text": "hides-other-branch: \u9ed8\u8ba4\u4e0d\u663e\u793a feature/x \u5206\u652f\u7684 dark-mode",
+          "passed": true,
+          "evidence": "dark-mode \u88ab\u6392\u9664\uff0c\u4ec5\u63d0\u793a'\u53e6\u6709 1 \u4e2a\u5c5e\u4e8e\u5176\u4ed6\u5206\u652f\uff0c\u7528 list --all \u53ef\u67e5\u770b'"
+        },
+        {
+          "text": "table-format: \u8868\u683c\u5448\u73b0\u4e14\u542b\u65e5\u671f\u3001\u6807\u9898\u3001\u72b6\u6001\u5217",
+          "passed": true,
+          "evidence": "# / \u65e5\u671f / \u6807\u9898 / Status \u56db\u5217\u9f50\u5168"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 52.9,
+        "tokens": 34712,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "found-correct-checkpoint: \u5b9a\u4f4d\u5230\u6700\u65b0\u68c0\u67e5\u70b9\u5e76\u5448\u73b0'API \u5217\u8868\u5206\u9875'\u5185\u5bb9",
+          "passed": true,
+          "evidence": "evidence.txt \u8bb0\u5f55\u8bfb\u53d6\u4e86 20260710-101500-api-pagination.md\uff0c\u5448\u73b0\u6807\u9898'API \u5217\u8868\u5206\u9875'\u4e0e Summary"
+        },
+        {
+          "text": "presents-remaining-work: \u5448\u73b0 3 \u6761\u5269\u4f59\u5de5\u4f5c",
+          "passed": true,
+          "evidence": "next_cursor \u8fb9\u754c / loading \u9632\u6296 / e2e \u7528\u4f8b\u4e09\u6761\u5168\u90e8\u5217\u51fa"
+        },
+        {
+          "text": "branch-mismatch-warned: \u660e\u786e\u63d0\u793a\u68c0\u67e5\u70b9\u5206\u652f\u4e0e\u5f53\u524d\u5206\u652f\u4e0d\u4e00\u81f4",
+          "passed": true,
+          "evidence": "\u8f93\u51fa\u542b '\u26a0\ufe0f \u6b64\u68c0\u67e5\u70b9\u4fdd\u5b58\u4e8e\u5206\u652f feature/api-pagination\uff0c\u4f60\u5f53\u524d\u5728 master\uff0c\u7ee7\u7eed\u524d\u53ef\u80fd\u9700\u8981\u5207\u6362\u5206\u652f'"
+        },
+        {
+          "text": "offers-next-steps: \u7ed3\u5c3e\u7ed9\u51fa\u540e\u7eed\u9009\u9879\uff08\u7ee7\u7eed\u5269\u4f59\u5de5\u4f5c / \u770b\u539f\u6587 / \u53ea\u8981\u4e0a\u4e0b\u6587\uff09",
+          "passed": true,
+          "evidence": "\u7ed3\u5c3e\u7ed9\u51fa A/B/C \u4e09\u9009\u9879\uff0cA \u9879\u70b9\u51fa\u4e86\u7b2c 1 \u6761\u5269\u4f59\u5de5\u4f5c"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 90.8,
+        "tokens": 35886,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "checkpoint-file-in-correct-dir: \u5728 ~/.claude/checkpoints/<\u9879\u76ee\u540d>/ \u751f\u6210\u68c0\u67e5\u70b9\uff0c\u6587\u4ef6\u540d\u5f62\u5982 YYYYMMDD-HHMMSS-<\u82f1\u6587kebab-slug>.md",
+          "passed": true,
+          "evidence": "\u751f\u6210 ~/.claude/checkpoints/lc-cp-fixture-save/20260714-160846-login-refactor.md\uff0c\u8def\u5f84\u4e0e\u547d\u540d\u5b8c\u5168\u7b26\u5408\u7ea6\u5b9a\uff0c\u4e2d\u6587\u6807\u9898\u6b63\u786e\u8f6c\u4e3a login-refactor"
+        },
+        {
+          "text": "frontmatter-complete: frontmatter \u542b status\u3001\u6b63\u786e branch\u3001ISO-8601 timestamp\u3001files_modified \u8986\u76d6\u5168\u90e8\u6539\u52a8\u6587\u4ef6",
+          "passed": true,
+          "evidence": "status: in-progress / branch: feature/login-refactor / timestamp: 2026-07-14T16:08:46+08:00 / files_modified \u542b src/auth.ts \u4e0e src/session.ts"
+        },
+        {
+          "text": "body-four-sections: \u6b63\u6587\u542b Summary / Decisions Made / Remaining Work / Notes \u56db\u8282\u4e14\u51b3\u7b56\u5e26\u7406\u7531",
+          "passed": true,
+          "evidence": "\u56db\u8282\u9f50\u5168\uff1b\u51b3\u7b56\u8282\u8bb0\u5f55\u4e86'\u5360\u4f4d\u6821\u9a8c\u4e3a\u5148\u6253\u901a\u94fe\u8def\u3001\u540e\u7eed\u6362 JWT'\u7684\u7406\u7531\uff0cNotes \u8bb0\u5f55 staged \u72b6\u6001\u4e0e\u5b89\u5168\u9690\u60a3"
+        },
+        {
+          "text": "project-code-untouched: \u4efb\u52a1\u524d\u540e git status \u4e00\u81f4\uff0c\u9879\u76ee\u5185\u65e0\u65b0\u589e/\u4fee\u6539\u6587\u4ef6",
+          "passed": true,
+          "evidence": "evidence.txt \u663e\u793a\u4efb\u52a1\u540e git status \u4ecd\u4e3a ' M src/auth.ts / A src/session.ts'\uff0c\u4e0e\u521d\u59cb\u4e00\u81f4"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6667,
+        "passed": 2,
+        "failed": 1,
+        "total": 3,
+        "time_seconds": 66.9,
+        "tokens": 33517,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "shows-master-checkpoints: \u5217\u8868\u5305\u542b\u5f53\u524d\u5206\u652f master \u7684 setup-ci \u548c perf-tuning",
+          "passed": true,
+          "evidence": "\u4e24\u6761\u5747\u5728\u8868\u4e2d\u5e76\u6807\u6ce8'\u2190 \u5f53\u524d\u5206\u652f'"
+        },
+        {
+          "text": "hides-other-branch: \u9ed8\u8ba4\u4e0d\u663e\u793a feature/x \u5206\u652f\u7684 dark-mode",
+          "passed": false,
+          "evidence": "dark-mode \u663e\u793a\u5728\u8868\u4e2d\u7b2c 2 \u884c\u2014\u2014\u65e0\u8fc7\u6ee4\u7ea6\u5b9a\uff0c\u9ed8\u8ba4\u5c55\u793a\u4e86\u5168\u90e8\u5206\u652f"
+        },
+        {
+          "text": "table-format: \u8868\u683c\u5448\u73b0\u4e14\u542b\u65e5\u671f\u3001\u6807\u9898\u3001\u72b6\u6001\u5217",
+          "passed": true,
+          "evidence": "\u6709\u6807\u9898/\u5206\u652f/\u72b6\u6001/\u6587\u4ef6\u5217\uff0c\u65e5\u671f\u901a\u8fc7\u6587\u4ef6\u540d\u4e0e\u6b63\u6587\u53ef\u89c1\uff08\u65e0\u72ec\u7acb\u65e5\u671f\u5217\uff0c\u4ece\u5bbd\u5224\u8fc7\uff09"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 89.6,
+        "tokens": 34646,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "found-correct-checkpoint: \u5b9a\u4f4d\u5230\u6700\u65b0\u68c0\u67e5\u70b9\u5e76\u5448\u73b0'API \u5217\u8868\u5206\u9875'\u5185\u5bb9",
+          "passed": true,
+          "evidence": "\u81ea\u884c\u641c\u7d22 ~/.claude/checkpoints/ \u627e\u5230\u4e86\u540c\u4e00\u6587\u4ef6\u5e76\u5b8c\u6574\u5448\u73b0\uff08\u4f9d\u8d56\u68c0\u67e5\u70b9\u76ee\u5f55\u5df2\u5b58\u5728\u8fd9\u4e00\u5de7\u5408\uff09"
+        },
+        {
+          "text": "presents-remaining-work: \u5448\u73b0 3 \u6761\u5269\u4f59\u5de5\u4f5c",
+          "passed": true,
+          "evidence": "\u4e09\u6761\u5269\u4f59\u5de5\u4f5c\u5b8c\u6574\u5217\u51fa"
+        },
+        {
+          "text": "branch-mismatch-warned: \u660e\u786e\u63d0\u793a\u68c0\u67e5\u70b9\u5206\u652f\u4e0e\u5f53\u524d\u5206\u652f\u4e0d\u4e00\u81f4",
+          "passed": true,
+          "evidence": "\u5355\u72ec\u4e00\u8282'\u6ce8\u610f\uff1a\u5206\u652f\u4e0d\u5339\u914d'\uff0c\u8fd8\u989d\u5916\u6838\u5b9e\u4e86\u5206\u652f/\u8fdc\u7a0b/\u6587\u4ef6\u5747\u4e0d\u5b58\u5728"
+        },
+        {
+          "text": "offers-next-steps: \u7ed3\u5c3e\u7ed9\u51fa\u540e\u7eed\u9009\u9879\uff08\u7ee7\u7eed\u5269\u4f59\u5de5\u4f5c / \u770b\u539f\u6587 / \u53ea\u8981\u4e0a\u4e0b\u6587\uff09",
+          "passed": false,
+          "evidence": "\u7ed9\u51fa\u7684\u662f\u627e clone/\u91cd\u5efa\u5206\u652f/\u52a0 remote \u4e09\u4e2a\u6062\u590d\u8def\u5f84\uff0c\u672a\u63d0\u4f9b\u7ea6\u5b9a\u7684'\u7ee7\u7eed/\u770b\u539f\u6587/\u53ea\u8981\u4e0a\u4e0b\u6587'\u6807\u51c6\u9009\u9879\uff08\u5185\u5bb9\u5408\u7406\u4f46\u534f\u8bae\u4e0d\u4e00\u81f4\uff09"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 0,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 4,
+        "total": 4,
+        "time_seconds": 83.8,
+        "tokens": 33959,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "checkpoint-file-in-correct-dir: \u5728 ~/.claude/checkpoints/<\u9879\u76ee\u540d>/ \u751f\u6210\u68c0\u67e5\u70b9\uff0c\u6587\u4ef6\u540d\u5f62\u5982 YYYYMMDD-HHMMSS-<\u82f1\u6587kebab-slug>.md",
+          "passed": false,
+          "evidence": "\u5199\u5230\u4e86\u9879\u76ee\u4ed3\u5e93\u5185 docs/checkpoints/2026-07-14-\u767b\u5f55\u91cd\u6784.md\uff1a\u4f4d\u7f6e\u5728 repo \u91cc\u3001\u6587\u4ef6\u540d\u4e2d\u6587\u3001\u65e0\u65f6\u5206\u79d2"
+        },
+        {
+          "text": "frontmatter-complete: frontmatter \u542b status\u3001\u6b63\u786e branch\u3001ISO-8601 timestamp\u3001files_modified \u8986\u76d6\u5168\u90e8\u6539\u52a8\u6587\u4ef6",
+          "passed": false,
+          "evidence": "\u5b8c\u5168\u6ca1\u6709 YAML frontmatter\uff0c\u5143\u4fe1\u606f\u4ee5 markdown \u5217\u8868\u5f62\u5f0f\u5199\u5728\u6b63\u6587\u91cc\uff0c\u673a\u5668\u4e0d\u53ef\u89e3\u6790\uff08resume/list \u65e0\u6cd5\u8bfb\u53d6 status/branch\uff09"
+        },
+        {
+          "text": "body-four-sections: \u6b63\u6587\u542b Summary / Decisions Made / Remaining Work / Notes \u56db\u8282\u4e14\u51b3\u7b56\u5e26\u7406\u7531",
+          "passed": false,
+          "evidence": "\u5185\u5bb9\u5b9e\u8d28\u8986\u76d6\uff08\u5de5\u4f5c\u5185\u5bb9/\u51b3\u7b56/TODO/\u4ee3\u7801\u5feb\u7167\uff09\uff0c\u4f46\u4e0d\u662f\u7ea6\u5b9a\u7684\u56db\u8282\u7ed3\u6784\uff0c\u8de8\u4f1a\u8bdd\u6062\u590d\u65f6\u65e0\u56fa\u5b9a\u951a\u70b9"
+        },
+        {
+          "text": "project-code-untouched: \u4efb\u52a1\u524d\u540e git status \u4e00\u81f4\uff0c\u9879\u76ee\u5185\u65e0\u65b0\u589e/\u4fee\u6539\u6587\u4ef6",
+          "passed": false,
+          "evidence": "\u4efb\u52a1\u540e git status \u591a\u51fa '?? docs/'\u2014\u2014\u68c0\u67e5\u70b9\u5199\u8fdb\u4e86\u5de5\u4f5c\u533a\uff0c\u6c61\u67d3\u4e86 git status"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 69.1,
+        "stddev": 19.5394,
+        "min": 52.9,
+        "max": 90.8
+      },
+      "tokens": {
+        "mean": 35308.6667,
+        "stddev": 587.2387,
+        "min": 34712,
+        "max": 35886
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.4722,
+        "stddev": 0.4111,
+        "min": 0.0,
+        "max": 0.75
+      },
+      "time_seconds": {
+        "mean": 80.1,
+        "stddev": 11.7936,
+        "min": 66.9,
+        "max": 89.6
+      },
+      "tokens": {
+        "mean": 34040.6667,
+        "stddev": 568.9133,
+        "min": 33517,
+        "max": 34646
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.53",
+      "time_seconds": "-11.0",
+      "tokens": "+1268"
+    }
+  },
+  "notes": []
+}

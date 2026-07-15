@@ -1,7 +1,7 @@
 # Claude Code Skills 清单
 
 > 全局安装目录：`~/.claude/skills/`
-> 最近更新：2026-07-13
+> 最近更新：2026-07-14
 
 ---
 
@@ -71,12 +71,15 @@
 
 | Skill | 命令 | 说明 |
 |-------|------|------|
+| [lc-checkpoint](lc-checkpoint/README.md) | `保存进度` / `恢复进度` / `列出检查点` | 保存/恢复会话工作状态，按分支隔离，7 天自动清理 |
 | [lc-branch-impact-analysis](lc-branch-impact-analysis/SKILL.md) | `/lc-branch-impact-analysis` | 分析当前分支与目标分支的代码差异，评估影响面 |
 | [lc-branch-ui-fix](lc-branch-ui-fix/SKILL.md) | `/lc-branch-ui-fix` | 对比 master 检测并修复 UI 样式回归 |
 | [lc-commit-check](lc-commit-check/SKILL.md) | `/lc-commit-check` | 提交前代码质量检查（Lint + Style + Types） |
 | [lc-commit-impact-analysis](lc-commit-impact-analysis/SKILL.md) | `/lc-commit-impact-analysis` | 分析代码改动的逻辑影响和潜在 bug |
 | [lc-mobile-pc-adaptive](lc-mobile-pc-adaptive/SKILL.md) | `/lc-mobile-pc-adaptive` | 检测并修复 H5 页面在 PC 屏幕上的布局问题 |
 | [lc-html-css-seo-optimizer](lc-html-css-seo-optimizer/SKILL.md) | `/lc-html-css-seo-optimizer` | HTML/CSS SEO 优化，简化结构减少嵌套 |
+| [lc-seo-page-rewrite](lc-seo-page-rewrite/SKILL.md) | `seo改写` + 路由 | kejinshou_m 页面迁移到 h5-nuxt（SSR + TDK + SEO） |
+| [lc-mp-taobao](lc-mp-taobao/SKILL.md) | 在 tb-account-center 项目内自动触发 | 淘宝小程序编码规范与脚手架 |
 
 ---
 

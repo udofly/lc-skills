@@ -7,7 +7,7 @@ description: kr36-ui 组件库 API 参考指南。kr36-ui 是对 TDesign Vue Nex
 
 kr36-ui 是对 TDesign Vue Next v1.9 的深度封装组件库，为氪金兽（Kejinshou）系列项目提供统一的 UI 组件。所有组件均以 `Kr` 前缀命名，底层透传 TDesign 属性，同时收窄 API 以保持项目一致性。
 
-**源码位置：** `/Users/gaochunfa/project/project_develop/kr36-ui`
+**源码位置：** 本机开发目录通常为 `~/project/project_develop/kr36-ui`；若该路径不存在，可查看当前项目 `node_modules/kr36-ui` 中的类型声明，或询问用户源码位置。
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: lc-kejinshou-h5-vue
-description: 氪金兽 H5 移动端项目编码规范。在 kejinshou_m 项目中开发、重构或审查代码时必须应用此技能。当工作目录为 kejinshou_m 且涉及 Vue 组件、请求层、路由、样式等编码时自动触发。
+description: 氪金兽 H5 移动端项目编码规范。在 kejinshou_m 项目中开发、重构或审查代码时必须应用此技能。当工作目录为 kejinshou_m 且涉及 Vue 组件、MWP 协议请求层（mwpRequest）、路由、样式、Pinia store、常量管理、单元测试等编码时自动触发，即使用户没有明确要求加载规范。
 license: MIT
 metadata:
   author: kejinshou-team
@@ -715,7 +715,7 @@ storeUser.Fetch({ force: true });
 ## 13. 禁止事项
 
 - **禁止**在 Vue 组件中使用 Options API（`data()`、`methods`、`this`）— Pinia Store 的 Options 风格不受此限
-- **禁止**跨模块使用相对路径导入（`../../`），跨模块必须用 `@/`；同模块内 `./` 允许
+- **禁止**跨模块使用相对路径导入（`../../`），跨模块必须用 `@/`；同模块内 `./` 允许；存量代码中引用项目根资源（`package.json`、`assets/` 图片）的相对路径属历史遗留，改动相关文件时可顺手换成 `@/`，但不强制专项迁移
 - **禁止**使用 `import _ from 'lodash'`，必须按需导入 `lodash-es`
 - **禁止**使用 KrCard/KrForm/KrTable 等后台管理组件（那是 backend-kejinshou 项目的）
 - **禁止**使用 `MessagePlugin`（那是 TDesign 的，本项目用 Vant 的 `showToast`）
@@ -756,15 +756,15 @@ sentryEmits(SENTRY_EVENT.KJS_UPLOAD, { detail: '上传失败', error });
 **核心约定**：
 
 - MCP 只负责"取真相 / 取设计 / 看线上"，产物必须按本规范二次落地，**禁止原样塞进代码**。
-- 接口同步配套技能 `lc-feat-api-sync`：刷新并读取 OAS → 映射到 `MwpApi.ts` / `Mwp*.ts` → 替换 mock，映射不确定时用 `AskUserQuestion` 确认。
+- 接口同步流程：刷新并读取 OAS → 映射到 `MwpApi.ts` / `Mwp*.ts` → 替换 mock，映射不确定时用 `AskUserQuestion` 确认。配套技能 `lc-feat-api-sync` 可自动执行此流程（可选，未安装则按上述步骤手动同步）。
 - **禁止**因 Apifox 是 REST 风格就绕过 `mwpRequest` 直接 `axios`/`fetch`；**禁止**把新接口加到遗留 `services/` 层。
 - 同步更新对应页面文档 `modules/<view目录>/<Page>.md` 的「接口依赖」表。
 
 ---
 
-## 16. 文档维护约定（供 `lc-feat-document-release` / `lc-doc-sync` 读取）
+## 16. 文档维护约定（供文档同步类技能读取）
 
-> 本节是本项目**文档结构的单一事实源**。通用技能 `lc-feat-document-release`（发布后按功能粒度）与 `lc-doc-sync`（按时间/commit 粒度兜底）会读取本节，按此结构增量更新文档；其它项目各自在自己的技能里声明同名章节。
+> 本节是本项目**文档结构的单一事实源**。配套技能 `lc-feat-document-release`（发布后按功能粒度）与 `lc-doc-sync`（按时间/commit 粒度兜底）为**可选**——已安装则据本节自动增量更新文档，未安装则忽略技能名，人工维护文档时遵循同样结构即可；其它项目各自在自己的技能里声明同名章节。
 
 | 项 | 值 |
 |----|----|
@@ -802,7 +802,7 @@ sentryEmits(SENTRY_EVENT.KJS_UPLOAD, { detail: '上传失败', error });
 
 ## 17. 测试与验证约定（单元测试单一事实源）
 
-> 本节是本项目**单元测试约定的单一事实源**；文档站 `docs/kejinshou-h5-vue/testing.md` 是其镜像。配套技能 `lc-feat-verify` / `lc-feat-test` 据此补/跑单测。
+> 本节是本项目**单元测试约定的单一事实源**；文档站 `docs/kejinshou-h5-vue/testing.md` 是其镜像。配套技能 `lc-feat-verify`（可选）据此补/跑单测，未安装时手动执行 `npm run test:ci`。
 
 - **框架/环境**：Vitest + `happy-dom`，配置内联在 `vite.config.ts` 的 `test` 块（**无独立 `vitest.config.ts`**）；覆盖率 v8，`include: src/**`，`exclude: types/·constants/·mock/·*.d.ts`，并排除 `tests/e2e/**`。
 - **目录/命名**：测试在项目根 `test/`，文件名 `<被测模块>.test.ts`（如 `utils.test.ts`），相对路径引 `src/`。一个文件对应一个被测单元，禁止混塞无关模块。

@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "checkpoint-file-in-correct-dir: 在 ~/.claude/checkpoints/<项目名>/ 生成检查点，文件名形如 YYYYMMDD-HHMMSS-<英文kebab-slug>.md",
+      "passed": false,
+      "evidence": "写到了项目仓库内 docs/checkpoints/2026-07-14-登录重构.md：位置在 repo 里、文件名中文、无时分秒"
+    },
+    {
+      "text": "frontmatter-complete: frontmatter 含 status、正确 branch、ISO-8601 timestamp、files_modified 覆盖全部改动文件",
+      "passed": false,
+      "evidence": "完全没有 YAML frontmatter，元信息以 markdown 列表形式写在正文里，机器不可解析（resume/list 无法读取 status/branch）"
+    },
+    {
+      "text": "body-four-sections: 正文含 Summary / Decisions Made / Remaining Work / Notes 四节且决策带理由",
+      "passed": false,
+      "evidence": "内容实质覆盖（工作内容/决策/TODO/代码快照），但不是约定的四节结构，跨会话恢复时无固定锚点"
+    },
+    {
+      "text": "project-code-untouched: 任务前后 git status 一致，项目内无新增/修改文件",
+      "passed": false,
+      "evidence": "任务后 git status 多出 '?? docs/'——检查点写进了工作区，污染了 git status"
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 4,
+    "total": 4,
+    "pass_rate": 0.0
+  }
+}

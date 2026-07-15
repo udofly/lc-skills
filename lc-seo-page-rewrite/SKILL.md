@@ -30,7 +30,7 @@ metadata:
 
 1. **前置检查**
 
-   - 确认当前在 h5-nuxt 项目内、源项目路径存在（见 frontmatter `source_project`）
+   - 确认当前在 h5-nuxt 项目内、源项目路径存在（默认取 frontmatter `source_project`；该路径不存在时，先在 h5-nuxt 的同级/上级目录探测 `kejinshou_m`，仍找不到则询问用户路径，不要凭猜测继续）
    - 检查 h5-nuxt 是否已存在该路由页面（`pages/` 目录 + `app/router.options.ts`）：已存在 → 提示用户是重写还是放弃
    - 检查 `composables/usePageUtil.ts` 是否已预留该路由的 URL 函数（多数介绍页已预留，说明站内入口已就位）
 

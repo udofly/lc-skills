@@ -1,5 +1,5 @@
 ---
-name: "branch-ui-fix"
+name: lc-branch-ui-fix
 description: "对比 master 分支，检测并修复当前优化分支中引入的 UI 样式回归和功能异常。当用户提到'对比master修复样式'、'检查UI回归'、'优化分支样式问题'、'和master对比看看哪里不对'、'样式有问题'、'页面显示不对'、'功能不一致'时触发。也适用于 Lighthouse/性能优化分支需要确保视觉和功能与 master 保持一致的场景。"
 ---
 

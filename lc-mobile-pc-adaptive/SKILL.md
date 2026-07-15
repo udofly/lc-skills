@@ -1,5 +1,5 @@
 ---
-name: "mobile-pc-adaptive"
+name: lc-mobile-pc-adaptive
 description: "检测并修复移动端 H5 页面在 PC 屏幕上的布局问题。严格限制仅针对用户提供的代码文件或片段进行修复，禁止进行全局搜索或修复。"
 ---
 

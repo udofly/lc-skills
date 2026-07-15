@@ -1,0 +1,18 @@
+Task: 列出检查点 (list checkpoints), working dir /tmp/lc-cp-fixture-list, without invoking the lc-checkpoint skill.
+
+Inspected:
+1. /tmp/lc-cp-fixture-list
+   - ls -la: contains .git and README.md only
+   - git branch --show-current => master
+   - git log --oneline -5 => c71b29f init (single commit)
+2. ~/.claude/checkpoints/ (checkpoint storage convention: ~/.claude/checkpoints/<project-name>/)
+   - Subdirs: lc-cp-fixture-list, lc-cp-fixture-resume, lc-cp-fixture-save
+   - Project dir ~/.claude/checkpoints/lc-cp-fixture-list/ contains 3 markdown checkpoints:
+     * 20260701-090000-setup-ci.md    (status: completed,   branch: master,    timestamp: 2026-07-12T18:00:00+08:00)
+     * 20260705-140000-dark-mode.md   (status: in-progress, branch: feature/x, timestamp: 2026-07-12T18:00:00+08:00)
+     * 20260712-180000-perf-tuning.md (status: in-progress, branch: master,    timestamp: 2026-07-12T18:00:00+08:00)
+3. Read full content of all 3 checkpoint files (cat) to extract frontmatter (status, branch, timestamp, files_modified) and task names.
+
+Method: matched checkpoint project dir by working-directory basename (lc-cp-fixture-list); listed all checkpoints sorted newest-first, highlighted the two matching the current branch (master) and identified the latest in-progress checkpoint (perf-tuning) as the resume candidate.
+
+No files were modified in the fixture project or checkpoint directories.

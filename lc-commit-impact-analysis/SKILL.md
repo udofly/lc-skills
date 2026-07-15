@@ -1,5 +1,5 @@
 ---
-name: "commit-impact-analysis"
+name: lc-commit-impact-analysis
 description: "Analyzes code changes for logic, bugs, and behavioral impact. ALWAYS use this skill when the user asks to analyze uncommitted changes, says things like '分析未提交' / '分析一下' / '有没有问题' / '对逻辑有啥影响' / '重新分析' / '看看这些改了什么' / '影响范围' / '未提交的内容', or is about to commit code. Also trigger on any git diff analysis request."
 ---
 

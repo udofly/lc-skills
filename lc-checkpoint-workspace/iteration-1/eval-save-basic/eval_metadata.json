@@ -1,0 +1,11 @@
+{
+  "eval_id": 0,
+  "eval_name": "save-basic",
+  "prompt": "保存进度 登录重构",
+  "assertions": [
+    "checkpoint-file-in-correct-dir: 在 ~/.claude/checkpoints/lc-cp-fixture-save/ 生成检查点文件，文件名形如 YYYYMMDD-HHMMSS-<英文kebab-slug>.md（中文标题'登录重构'应转成英文 slug 如 login-refactor）",
+    "frontmatter-complete: YAML frontmatter 含 status、branch: feature/login-refactor、ISO-8601 timestamp、files_modified（须包含 src/auth.ts 和 src/session.ts）",
+    "body-four-sections: 正文含 Working on 标题及 Summary / Decisions Made / Remaining Work / Notes 四节，且决策节体现了'占位实现后续换 JWT'这类理由",
+    "project-code-untouched: evidence.txt 中任务后的 git status 与初始一致（仅 M src/auth.ts 与 A src/session.ts），项目内没有新增/修改文件"
+  ]
+}

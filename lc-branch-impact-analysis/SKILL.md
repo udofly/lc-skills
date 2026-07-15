@@ -1,5 +1,5 @@
 ---
-name: "branch-impact-analysis"
+name: lc-branch-impact-analysis
 description: "分析当前分支与指定分支的代码差异，评估新功能是否对原有业务造成影响。Invoke when 用户请求分析分支影响、提取影响点或进行代码安全性检查时。"
 ---
 

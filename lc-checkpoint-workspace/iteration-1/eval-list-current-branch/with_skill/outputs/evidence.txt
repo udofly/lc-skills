@@ -1,0 +1,12 @@
+Current git branch (in /tmp/lc-cp-fixture-list): master
+Repo name / project: lc-cp-fixture-list
+Checkpoint dir: /Users/gaochunfa/.claude/checkpoints/lc-cp-fixture-list
+
+Checkpoint files examined (frontmatter read via head):
+1. 20260712-180000-perf-tuning.md  -> branch: master,    status: in-progress, timestamp: 2026-07-12T18:00:00+08:00
+2. 20260705-140000-dark-mode.md    -> branch: feature/x, status: in-progress, timestamp: 2026-07-12T18:00:00+08:00 (EXCLUDED from default list: not current branch)
+3. 20260701-090000-setup-ci.md     -> branch: master,    status: completed,   timestamp: 2026-07-12T18:00:00+08:00
+
+Default list behavior per SKILL.md: show only current-branch (master) checkpoints; --all adds Branch column.
+Displayed dates parsed from filename timestamps (20260712, 20260701).
+No project files were modified.

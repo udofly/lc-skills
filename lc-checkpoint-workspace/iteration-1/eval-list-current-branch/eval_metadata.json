@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "list-current-branch",
+  "prompt": "列出检查点",
+  "assertions": [
+    "shows-master-checkpoints: 列表包含当前分支 master 的两个检查点 setup-ci 和 perf-tuning",
+    "hides-other-branch: 默认不显示 feature/x 分支的 dark-mode（无 --all 参数）",
+    "table-format: 以表格呈现且含日期、标题、状态列"
+  ]
+}

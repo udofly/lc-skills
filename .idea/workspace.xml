@@ -4,8 +4,58 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="329e5df7-a489-4fc6-97f4-79f3a86b4a8f" name="Changes" comment="feat(pipeline): 精简流水线步骤合并质量验证环节&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明">
+    <list default="true" id="329e5df7-a489-4fc6-97f4-79f3a86b4a8f" name="Changes" comment="feat(pipeline): 精简流水线步骤并新增文档同步技能&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明&#10;- 新增 lc-doc-sync 文档时间同步技能，按 commit 粒度兜底同步遗漏变更&#10;- 实现多功能流水线支持，一个分支可包含多条流水线，每条流水线支持多个功能&#10;- 优化断点恢复机制，支持多功能看板选择和批量执行模式">
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/benchmark.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/benchmark.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/eval_metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/outputs/evidence.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/outputs/final_response.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/run-1/grading.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/run-1/timing.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/outputs/evidence.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/outputs/final_response.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/run-1/grading.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/run-1/timing.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/eval_metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/outputs/evidence.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/outputs/final_response.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/run-1/grading.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/run-1/timing.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/outputs/evidence.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/outputs/final_response.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/run-1/grading.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/run-1/timing.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/eval_metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/outputs/20260714-160846-login-refactor.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/outputs/evidence.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/outputs/final_response.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/run-1/grading.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/run-1/timing.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/outputs/2026-07-14-登录重构.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/outputs/evidence.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/outputs/final_response.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/run-1/grading.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/run-1/timing.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint/SKILL.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-checkpoint/evals/evals.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-skill-sync/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-skill-sync/SKILL.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-skill-sync/scripts/sync.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lc-skill-sync/sync-map.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-branch-impact-analysis/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-branch-impact-analysis/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-branch-ui-fix/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-branch-ui-fix/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-commit-check/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-commit-check/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-commit-impact-analysis/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-commit-impact-analysis/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-html-css-seo-optimizer/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-html-css-seo-optimizer/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-kr36-ui-guide/skill.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kr36-ui-guide/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-mobile-pc-adaptive/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-mobile-pc-adaptive/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-mp-taobao/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-mp-taobao/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-seo-page-rewrite/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-seo-page-rewrite/SKILL.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,6 +216,8 @@
       <workItem from="1780191224898" duration="516000" />
       <workItem from="1782714048706" duration="3019000" />
       <workItem from="1783492052677" duration="2769000" />
+      <workItem from="1783941421699" duration="107000" />
+      <workItem from="1784101692119" duration="2145000" />
     </task>
     <task id="LOCAL-00001" summary="chore: 初始化项目配置并添加性能基准测试技能&#10;&#10;- 添加 .idea 相关配置文件到 gitignore&#10;- 创建 modules.xml 和 skills.iml 配置文件&#10;- 添加 benchmark 性能基准测试技能文档和实现&#10;- 添加 browse 浏览器自动化技能文档和实现&#10;- 配置技能的 preamble 执行逻辑&#10;- 设置性能监控和基线比较功能&#10;- 实现页面加载时间、核心网络指标检测&#10;- 添加资源大小和请求数量分析功能">
       <option name="closed" value="true" />
@@ -295,7 +347,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783492112612</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="feat(pipeline): 精简流水线步骤并新增文档同步技能&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明&#10;- 新增 lc-doc-sync 文档时间同步技能，按 commit 粒度兜底同步遗漏变更&#10;- 实现多功能流水线支持，一个分支可包含多条流水线，每条流水线支持多个功能&#10;- 优化断点恢复机制，支持多功能看板选择和批量执行模式">
+      <option name="closed" value="true" />
+      <created>1783941485204</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1783941485204</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -327,6 +387,7 @@
     <MESSAGE value="chore: 添加项目IDE配置和性能基准测试技能&#10;&#10;- 添加 .idea/workspace.xml 配置文件用于IDE设置&#10;- 添加 benchmark 技能的完整实现文档&#10;- 实现性能回归检测功能用于页面加载时间基准测试&#10;- 添加核心Web Vitals和资源大小的性能监控功能&#10;- 配置浏览守护进程用于PR前后的性能对比检测&#10;- 添加项目变更日志文档记录所有skill版本更新&#10;- 添加编码规范加载共享流程文档&#10;- 添加E2E测试完整指南文档&#10;- 更新流水线使用指南至v1.3版本" />
     <MESSAGE value="feat(qa): 新增变更影响分析维度提升质量审查覆盖度&#10;&#10;- 参考 lc-branch-impact-analysis 和 lc-commit-impact-analysis 分析手法&#10;- 新增 4.6 变更影响分析（回归安全性）包含 8 种 bug 模式检测&#10;- 添加删除/重命名 grep 验证、行为变更检测、配置影响评估&#10;- QA 报告模板扩展为六维度评分体系（5 → 6 维度）&#10;- pipeline-guide 同步更新为六维度评审标准&#10;- 文档示例和交互指南全面适配新评审维度" />
     <MESSAGE value="feat(pipeline): 精简流水线步骤合并质量验证环节&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(pipeline): 精简流水线步骤合并质量验证环节&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明" />
+    <MESSAGE value="feat(pipeline): 精简流水线步骤并新增文档同步技能&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明&#10;- 新增 lc-doc-sync 文档时间同步技能，按 commit 粒度兜底同步遗漏变更&#10;- 实现多功能流水线支持，一个分支可包含多条流水线，每条流水线支持多个功能&#10;- 优化断点恢复机制，支持多功能看板选择和批量执行模式" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(pipeline): 精简流水线步骤并新增文档同步技能&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明&#10;- 新增 lc-doc-sync 文档时间同步技能，按 commit 粒度兜底同步遗漏变更&#10;- 实现多功能流水线支持，一个分支可包含多条流水线，每条流水线支持多个功能&#10;- 优化断点恢复机制，支持多功能看板选择和批量执行模式" />
   </component>
 </project>

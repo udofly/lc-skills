@@ -1,0 +1,32 @@
+Evidence of what was inspected to answer "我上次做到哪了？"
+
+1. Working directory repo state (/tmp/lc-cp-fixture-resume):
+   - ls -la: only README.md ("# api-demo") and .git; no src/ directory
+   - git status: on branch master, working tree clean
+   - git log --oneline (and --all): single commit 669c237 "init"
+   - git branch -a: only master; no feature/api-pagination locally or remotely
+   - git remote -v: no remotes configured
+   - git branch -a --list '*pagination*': empty
+
+2. Checkpoint storage (~/.claude/checkpoints/):
+   - Directory listing showed lc-cp-fixture-resume/ containing one checkpoint:
+     ~/.claude/checkpoints/lc-cp-fixture-resume/20260710-101500-api-pagination.md
+   - Read the checkpoint file. Frontmatter:
+       status: in-progress
+       branch: feature/api-pagination
+       timestamp: 2026-07-10T10:15:00+08:00
+       files_modified: src/api/list.ts, src/components/Pager.vue
+   - Body: working on "API 列表分页" (cursor pagination); Pager component done,
+     backend integration half-finished; decisions (cursor over offset, base64
+     cursor); remaining work (empty next_cursor edge case, loading debounce,
+     e2e tests); note about flaky 502s in test env.
+
+3. Cross-check / mismatch detection:
+   - Checkpoint claims branch feature/api-pagination and modified files under
+     src/, but the current repo has neither the branch nor the files, and no
+     remote to fetch from. Concluded the checkpointed work lives in a different
+     clone/worktree or the branch was deleted, and surfaced this mismatch to
+     the user with recovery options instead of pretending the state is resumable
+     as-is.
+
+No files in the fixture repo were modified. Only the two output files were written.

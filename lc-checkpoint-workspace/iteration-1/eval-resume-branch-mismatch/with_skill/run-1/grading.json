@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "found-correct-checkpoint: 定位到最新检查点并呈现'API 列表分页'内容",
+      "passed": true,
+      "evidence": "evidence.txt 记录读取了 20260710-101500-api-pagination.md，呈现标题'API 列表分页'与 Summary"
+    },
+    {
+      "text": "presents-remaining-work: 呈现 3 条剩余工作",
+      "passed": true,
+      "evidence": "next_cursor 边界 / loading 防抖 / e2e 用例三条全部列出"
+    },
+    {
+      "text": "branch-mismatch-warned: 明确提示检查点分支与当前分支不一致",
+      "passed": true,
+      "evidence": "输出含 '⚠️ 此检查点保存于分支 feature/api-pagination，你当前在 master，继续前可能需要切换分支'"
+    },
+    {
+      "text": "offers-next-steps: 结尾给出后续选项（继续剩余工作 / 看原文 / 只要上下文）",
+      "passed": true,
+      "evidence": "结尾给出 A/B/C 三选项，A 项点出了第 1 条剩余工作"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

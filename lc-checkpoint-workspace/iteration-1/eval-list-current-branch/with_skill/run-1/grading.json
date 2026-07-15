@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "shows-master-checkpoints: 列表包含当前分支 master 的 setup-ci 和 perf-tuning",
+      "passed": true,
+      "evidence": "两条均在表中，按时间倒序"
+    },
+    {
+      "text": "hides-other-branch: 默认不显示 feature/x 分支的 dark-mode",
+      "passed": true,
+      "evidence": "dark-mode 被排除，仅提示'另有 1 个属于其他分支，用 list --all 可查看'"
+    },
+    {
+      "text": "table-format: 表格呈现且含日期、标题、状态列",
+      "passed": true,
+      "evidence": "# / 日期 / 标题 / Status 四列齐全"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

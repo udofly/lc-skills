@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "found-correct-checkpoint: 定位到最新检查点并呈现'API 列表分页'内容",
+      "passed": true,
+      "evidence": "自行搜索 ~/.claude/checkpoints/ 找到了同一文件并完整呈现（依赖检查点目录已存在这一巧合）"
+    },
+    {
+      "text": "presents-remaining-work: 呈现 3 条剩余工作",
+      "passed": true,
+      "evidence": "三条剩余工作完整列出"
+    },
+    {
+      "text": "branch-mismatch-warned: 明确提示检查点分支与当前分支不一致",
+      "passed": true,
+      "evidence": "单独一节'注意：分支不匹配'，还额外核实了分支/远程/文件均不存在"
+    },
+    {
+      "text": "offers-next-steps: 结尾给出后续选项（继续剩余工作 / 看原文 / 只要上下文）",
+      "passed": false,
+      "evidence": "给出的是找 clone/重建分支/加 remote 三个恢复路径，未提供约定的'继续/看原文/只要上下文'标准选项（内容合理但协议不一致）"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  }
+}

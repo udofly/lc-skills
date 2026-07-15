@@ -1,0 +1,43 @@
+{
+  "skill_name": "lc-checkpoint",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "save-basic",
+      "prompt": "保存进度 登录重构",
+      "expected_output": "在 ~/.claude/checkpoints/lc-cp-fixture-save/ 生成 <时间戳>-login-refactor*.md，frontmatter 含 status/branch/timestamp/files_modified，正文四节齐全，不修改项目代码",
+      "files": ["/tmp/lc-cp-fixture-save"],
+      "assertions": [
+        "checkpoint-file-in-correct-dir: 在 ~/.claude/checkpoints/<项目名>/ 生成检查点，文件名形如 YYYYMMDD-HHMMSS-<英文kebab-slug>.md",
+        "frontmatter-complete: frontmatter 含 status、正确 branch、ISO-8601 timestamp、files_modified 覆盖全部改动文件",
+        "body-four-sections: 正文含 Summary / Decisions Made / Remaining Work / Notes 四节且决策带理由",
+        "project-code-untouched: 任务前后 git status 一致，项目内无新增/修改文件"
+      ]
+    },
+    {
+      "id": 1,
+      "eval_name": "resume-branch-mismatch",
+      "prompt": "我上次做到哪了？",
+      "expected_output": "找到最新检查点并呈现 Summary/Remaining Work，明确提示检查点分支与当前分支不一致",
+      "files": ["/tmp/lc-cp-fixture-resume"],
+      "assertions": [
+        "found-correct-checkpoint: 定位到最新检查点并呈现其内容",
+        "presents-remaining-work: 完整呈现剩余工作条目",
+        "branch-mismatch-warned: 明确提示检查点分支与当前分支不一致",
+        "offers-next-steps: 结尾给出后续选项"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "list-current-branch",
+      "prompt": "列出检查点",
+      "expected_output": "表格列出当前分支的检查点，不显示其他分支的（无 --all 时）",
+      "files": ["/tmp/lc-cp-fixture-list"],
+      "assertions": [
+        "shows-master-checkpoints: 列表包含当前分支的全部检查点",
+        "hides-other-branch: 默认不显示其他分支的检查点",
+        "table-format: 表格呈现且含日期、标题、状态列"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "checkpoint-file-in-correct-dir: 在 ~/.claude/checkpoints/<项目名>/ 生成检查点，文件名形如 YYYYMMDD-HHMMSS-<英文kebab-slug>.md",
+      "passed": true,
+      "evidence": "生成 ~/.claude/checkpoints/lc-cp-fixture-save/20260714-160846-login-refactor.md，路径与命名完全符合约定，中文标题正确转为 login-refactor"
+    },
+    {
+      "text": "frontmatter-complete: frontmatter 含 status、正确 branch、ISO-8601 timestamp、files_modified 覆盖全部改动文件",
+      "passed": true,
+      "evidence": "status: in-progress / branch: feature/login-refactor / timestamp: 2026-07-14T16:08:46+08:00 / files_modified 含 src/auth.ts 与 src/session.ts"
+    },
+    {
+      "text": "body-four-sections: 正文含 Summary / Decisions Made / Remaining Work / Notes 四节且决策带理由",
+      "passed": true,
+      "evidence": "四节齐全；决策节记录了'占位校验为先打通链路、后续换 JWT'的理由，Notes 记录 staged 状态与安全隐患"
+    },
+    {
+      "text": "project-code-untouched: 任务前后 git status 一致，项目内无新增/修改文件",
+      "passed": true,
+      "evidence": "evidence.txt 显示任务后 git status 仍为 ' M src/auth.ts / A src/session.ts'，与初始一致"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

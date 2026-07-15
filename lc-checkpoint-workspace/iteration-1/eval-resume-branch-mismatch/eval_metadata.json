@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "resume-branch-mismatch",
+  "prompt": "我上次做到哪了？",
+  "assertions": [
+    "found-correct-checkpoint: 定位到 ~/.claude/checkpoints/lc-cp-fixture-resume/20260710-101500-api-pagination.md 并呈现'API 列表分页'内容",
+    "presents-remaining-work: 呈现内容包含检查点中 3 条剩余工作（next_cursor 边界、loading 防抖、e2e 用例）",
+    "branch-mismatch-warned: 明确提示检查点分支 feature/api-pagination 与当前分支 master 不一致",
+    "offers-next-steps: 结尾给出后续选项（继续剩余工作 / 看原文 / 只要上下文）"
+  ]
+}

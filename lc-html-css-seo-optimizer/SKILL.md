@@ -1,5 +1,5 @@
 ---
-name: "html-css-seo-optimizer"
+name: lc-html-css-seo-optimizer
 description: "Optimizes HTML/CSS for SEO by simplifying structure and reducing nesting while maintaining UI. Invoke when refactoring, cleaning up code, or improving semantic structure."
 ---
 

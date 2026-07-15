@@ -1,6 +1,6 @@
 ---
 name: lc-kejinshou-h5-nuxt
-description: 氪金兽 H5 Nuxt 项目编码规范。在 h5-nuxt 项目中开发、重构或审查代码时必须应用此技能。当工作目录为 h5-nuxt 且涉及 Vue 组件、请求层、路由、样式等编码时自动触发。
+description: 氪金兽 H5 Nuxt 项目编码规范。在 h5-nuxt 项目中开发、重构或审查代码时必须应用此技能。当工作目录为 h5-nuxt 且涉及 Vue 组件、请求层（useMwpRequest/useAppFetch）、路由、样式、SSR/SEO（TDK、预渲染、chunk error 防护）、composables、Pinia、Nuxt 配置等编码时自动触发，即使用户没有明确要求加载规范。
 license: MIT
 metadata:
   author: kejinshou-team
@@ -118,12 +118,14 @@ onMounted(() => {
 | 引号 | **单引号** |
 | 分号 | **无分号** |
 
+> 存量代码中仍有少量分号和 `@/` 导入（历史遗留，约占 15%）。修改老文件时，新增/改动的行遵循上述规范即可，不要为统一风格大规模重排无关代码。
+
 ### 1.3 KeepAlive 排除
 
-`app.vue` 中配置了 KeepAlive，LoginPage 和 ResetPwdPage 被排除缓存：
+`app.vue` 中配置了 KeepAlive，LoginPage、ResetPwdPage、TiebaSearchPage 被排除缓存：
 
 ```vue
-<NuxtPage :keepalive="{ exclude: ['LoginPage', 'ResetPwdPage'] }" />
+<NuxtPage :keepalive="{ exclude: ['LoginPage', 'ResetPwdPage', 'TiebaSearchPage'] }" />
 ```
 
 需要排除缓存的页面，在 `definePageMeta` 中设置组件名后加入 exclude 列表。
@@ -412,10 +414,15 @@ persist: {
 | `useAppToken` | Token 管理 | 从 query string/localStorage 提取 token，自动登录 |
 | `useAppUserUtil` | 用户工具 | `userLogout`/`isLogin`/`userToLogin`/`userLoginDo` |
 | `useAppVersion` | 版本提取 | 从 UA 提取氪金兽 App 版本号 |
+| `useCategoryCore` | 品类页核心 | 品类页状态与逻辑编排（Options/Instance 模式） |
+| `useCategoryFilter` | 品类筛选 | 支持 `normal`/`yanxuan`/`tieba`/`tieba-search` 四种模式 |
+| `useCategoryList` | 品类列表 | 品类页商品列表加载 |
+| `useCategorySort` | 品类排序 | 品类页排序状态管理 |
+| `useCollect` | 收藏 | 收藏操作，含 `getCollectQrText()` 收藏口令生成 |
+| `useImagePreview` | 图片预览 | Vant ImagePreview 封装，增加 PC 端键盘操作（Esc/方向键） |
 | `useImRequest` | IM 请求 | 带签名的即时通讯接口请求 |
 | `useInjectAlter` | 模式配置 | 根据 appMode 返回 storeTokenKey 等配置 |
 | `useInit` | 应用初始化 | 初始化逻辑入口 |
-| `useLeaveConfirm` | 页面离开确认 | popstate + 路由守卫双重拦截，防误触返回 |
 | `useMwpRequest` | MWP 协议请求 | MWP 签名、token 管理、请求队列 |
 | `useOpenInstall` | 深度链接 | OpenInstall 渠道检测与安装追踪 |
 | `useOpenInstallLoader` | SDK 懒加载 | 按需加载 OpenInstall SDK |
@@ -423,23 +430,12 @@ persist: {
 | `usePositionToTop` | 回到顶部 | 基于滚动位置的"回到顶部"按钮显隐控制 |
 | `useScrollPosition` | 滚动位置持久化 | VanList 滚动位置存储与恢复（跨路由） |
 | `useSocket` | WebSocket | Socket.IO 连接管理（IM 聊天） |
+| `useTiebaScheme` | 贴吧协议入口 | 列表页/搜索页共用，入参经 `resolveTiebaEntryParams` 单点缓存 |
+| `useTiebaTopBar` | 贴吧顶部 bar | URL 入参 `noKjsTopBar=1` 时隐藏氪金兽自绘顶部 bar |
 
-### 6.1 useLeaveConfirm 使用模式
+> 页面离开确认（popstate 拦截）目前没有通用 composable，个别页面（如 `pages/estimate/result`）为页面内联实现；如需复用请先确认有没有新增的封装，不要凭空调用 `useLeaveConfirm`。
 
-```typescript
-const { showLeaveConfirm, onLeaveConfirm, onLeaveCancel, skipLeave } = useLeaveConfirm({
-    beforeLeave: () => { /* 清理逻辑 */ },
-    isInApp: !!useNuxtApp().$uaInKejinshouApp,
-})
-
-// 主动跳转前跳过确认
-const goSomewhere = () => {
-    skipLeave()
-    router.push('/target')
-}
-```
-
-### 6.2 useScrollPosition 使用模式
+### 6.1 useScrollPosition 使用模式
 
 ```typescript
 const { restoreScrollPosition, startScrollListener, cleanupScrollListener } = useScrollPosition({
@@ -788,9 +784,9 @@ emitter.emit(IM_MESSAGE, data)
 
 ---
 
-## 24. 文档维护约定（供 `lc-feat-document-release` / 文档处理流程读取）
+## 24. 文档维护约定（供文档同步类技能读取）
 
-> 本节是本项目**文档结构的单一事实源**。发布后由文档处理流程读取本节，按此结构增量更新文档。
+> 本节是本项目**文档结构的单一事实源**。配套技能 `lc-feat-document-release`（可选）会在发布后读取本节按此结构增量更新文档；未安装则忽略技能名，人工维护文档时遵循同样结构即可。
 
 | 项 | 值 |
 |----|----|
