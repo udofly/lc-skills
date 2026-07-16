@@ -1,6 +1,6 @@
 # lc-doc-sync 文档时间同步使用指南
 
-> 版本: 1.0 | 更新日期: 2026-07-13 | 全局 skill，适用于所有项目（约定从项目自身技能读取）
+> 版本: 1.1 | 更新日期: 2026-07-15（document-release 引用更新为 fe-workflow release） | 全局 skill，适用于所有项目（约定从项目自身技能读取）
 
 ---
 
@@ -9,7 +9,7 @@
 - [1. 概述](#1-概述)
 - [2. 核心机制：一本账 + 两枚戳 + 一个锚点](#2-核心机制一本账--两枚戳--一个锚点)
 - [3. 命令用法](#3-命令用法)
-- [4. 与 lc-feat:document-release 的分工](#4-与-lc-featdocument-release-的分工)
+- [4. 与 fe-workflow release 的分工](#4-与-fe-workflow-release-的分工)
 - [5. 项目接入：需要声明的约定](#5-项目接入需要声明的约定)
 - [6. 变更 → 文档映射规则](#6-变更--文档映射规则)
 - [7. 常用场景速查](#7-常用场景速查)
@@ -20,7 +20,7 @@
 
 ## 1. 概述
 
-`lc-doc-sync` 按**时间 / commit 粒度**兜底同步项目文档：`lc-feat:document-release` 在 PR 合并后按**功能粒度**精细更新本功能文档，但 hotfix、重构、直接提交、他人合并的功能会绕过流水线——本 skill 负责把这些"漏网"变更对应的文档补齐。
+`lc-doc-sync` 按**时间 / commit 粒度**兜底同步项目文档：`fe-workflow release` 在 PR 合并后按**功能粒度**精细更新本功能文档，但 hotfix、重构、直接提交、他人合并的功能会绕过流水线——本 skill 负责把这些"漏网"变更对应的文档补齐。
 
 两者共写同一本更新账本、同一套 frontmatter 时间戳，互为补充而非替代。
 
@@ -31,7 +31,7 @@
 | 更新账本 | 项目文档根目录下的 `updates.md`：frontmatter `last_sync`（commit / date / by）+「更新记录」表（新记录在最上） |
 | 记录行格式 | `日期 / 同步范围（起止 commit）/ 来源 / 更新文档 / 摘要` |
 | 文档时间戳 | 每篇被更新的文档 frontmatter 打 `updated: YYYY-MM-DD` + `commit: <对齐的源码短 hash>` |
-| 增量锚点 | `last_sync.commit`；**只由 lc-doc-sync 完整同步到 HEAD 后推进**，document-release 只打戳 + 记账 |
+| 增量锚点 | `last_sync.commit`；**只由 lc-doc-sync 完整同步到 HEAD 后推进**，fe-workflow release 只打戳 + 记账 |
 | 幂等判断 | 目标文档 `commit` 等于变更 commit 或是其后代 → 已同步，跳过（两个 skill 重叠运行不重复劳动）；文档无戳时回退比较文档与源码各自的最后提交时间 |
 
 ## 3. 命令用法
@@ -45,9 +45,9 @@
 
 `--check` 报告内容：过时文档清单（每篇的落后 commit 区间与原因摘要）、未映射变更、工作区未提交改动附注、锚点信息。
 
-## 4. 与 lc-feat:document-release 的分工
+## 4. 与 fe-workflow release 的分工
 
-| | `lc-feat:document-release` | `lc-doc-sync` |
+| | `fe-workflow release` | `lc-doc-sync` |
 |---|---|---|
 | 时机 | PR 合并后（流水线收尾） | 定期 / 按需 |
 | 粒度 | 功能（feat-name） | 时间 / commit 区间 |
@@ -55,11 +55,11 @@
 | 职责 | 精细更新本功能文档 + 收尾杂务 | 兜底捕捉绕过流水线的变更 |
 | 账本 | 打戳 + 追加记录 | 打戳 + 追加记录 + **推进锚点** |
 
-**协作点**：document-release（≥0.0.8）收尾时自动跑一次 `lc-doc-sync --check`（只读），在总结里列出同期漏网变更；补齐由用户显式跑 `/lc-doc-sync`。
+**协作点**：fe-workflow release 收尾时自动跑一次 `lc-doc-sync --check`（只读），在总结里列出同期漏网变更；补齐由用户显式跑 `/lc-doc-sync`。
 
 ## 5. 项目接入：需要声明的约定
 
-本 skill **不硬编码任何项目路径**，运行时按以下链路读约定（与 document-release 同款委托模式，见 [lc-feat-coding-standard-loading.md](./lc-feat-coding-standard-loading.md)）：
+本 skill **不硬编码任何项目路径**，运行时按以下链路读约定（与 fe-workflow release 同款委托模式，见 fe-workflow SKILL.md「项目约定」）：
 
 ```
 项目 .claude/CLAUDE.md
@@ -69,7 +69,7 @@
 
 项目技能的「文档维护约定」需声明：
 
-1. 文档根目录、业务文档结构（如 1:1 镜像 `src/views`）、页面模板、命名规则、侧边栏文件、校验命令（document-release 也读这些）；
+1. 文档根目录、业务文档结构（如 1:1 镜像 `src/views`）、页面模板、命名规则、侧边栏文件、校验命令（fe-workflow release 也读这些）；
 2. **更新账本位置**（如 `docs/<站点目录>/updates.md`）、记录行格式、frontmatter 时间戳与幂等约定、锚点推进规则；
 3. （可选）临时文档区（如 `docs/temp/`：不挂侧边栏、不入账本、不打戳、不入库）。
 
@@ -94,7 +94,7 @@
 
 | 场景 | 做法 |
 |------|------|
-| 功能发布收尾 | `/lc-feat:document-release`（自动含漏网检查） |
+| 功能发布收尾 | `/fe-workflow release`（自动含漏网检查） |
 | 版本合入 master 后 | `/lc-doc-sync` 补齐同期漏网 + 推进锚点 |
 | 想先看欠了多少账 | `/lc-doc-sync --check` |
 | 季度 / 大重构后体检 | `/lc-doc-sync --scan --check` → 看清单再决定全量更新 |
@@ -106,7 +106,7 @@
 - **过时文档 > 15 篇**：先出清单让用户圈范围（全部 / 核心模块 / 自选），避免海量低质更新；`--check` 不触发圈范围，直接输出全量清单。
 - **锚点只增不减**：`--since` 早于当前锚点属回溯同步，只记账不回退锚点。
 - **不自动 git commit**：文档改动建议独立 `docs:` 提交。
-- **内容纪律**：以代码为准、只写业务层面；改已有文档 Edit 相关字段，不重写整篇（与 document-release 同款 Guardrails）。
+- **内容纪律**：以代码为准、只写业务层面；改已有文档 Edit 相关字段，不重写整篇（与 fe-workflow release 同款 Guardrails）。
 
 ## 9. 实例：kejinshou_m 的接入
 

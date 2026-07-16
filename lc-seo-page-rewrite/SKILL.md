@@ -1,6 +1,6 @@
 ---
 name: lc-seo-page-rewrite
-description: SEO 页面改写技能（kejinshou_m → h5-nuxt）。用户给一个路由（如 /intro/judicial），自动探索 kejinshou_m（SPA）中该页面的完整实现，在 h5-nuxt 中走 lc-feat 流水线完成 SEO 重写——功能完全一致、界面体验完全一致、实现尽可能符合 SEO（SSR + 语义化 HTML + 完整 TDK）。当用户说"seo改写"、"seo重写"、"把 xx 路由/页面迁到 nuxt"、"用 nuxt 重写 xx 页面"、"m站页面搬到 nuxt"、"xx 页面要能被百度/搜索引擎收录"并给出路由时触发；只要涉及把 kejinshou_m 现有页面迁移/重写到 h5-nuxt（即使没提"SEO"），都应使用本技能。
+description: SEO 页面改写技能（kejinshou_m → h5-nuxt）。用户给一个路由（如 /intro/judicial），自动探索 kejinshou_m（SPA）中该页面的完整实现，在 h5-nuxt 中走 fe-workflow 流水线完成 SEO 重写——功能完全一致、界面体验完全一致、实现尽可能符合 SEO（SSR + 语义化 HTML + 完整 TDK）。当用户说"seo改写"、"seo重写"、"把 xx 路由/页面迁到 nuxt"、"用 nuxt 重写 xx 页面"、"m站页面搬到 nuxt"、"xx 页面要能被百度/搜索引擎收录"并给出路由时触发；只要涉及把 kejinshou_m 现有页面迁移/重写到 h5-nuxt（即使没提"SEO"），都应使用本技能。
 license: MIT
 metadata:
   author: kejinshou-team
@@ -11,7 +11,7 @@ metadata:
 
 # SEO 页面改写（kejinshou_m → h5-nuxt）
 
-给定一个路由，从 kejinshou_m（Vue 3 SPA，无 SSR）完整还原页面的功能与视觉，在 h5-nuxt（Nuxt 3 SSR）中重写为 SEO 友好实现，并接入 lc-feat 流水线管理全流程。
+给定一个路由，从 kejinshou_m（Vue 3 SPA，无 SSR）完整还原页面的功能与视觉，在 h5-nuxt（Nuxt 3 SSR）中重写为 SEO 友好实现，并接入 fe-workflow 流水线管理全流程。
 
 **三条铁律（优先级从高到低）**：
 1. **功能完全一致**——交互、跳转、登录态分支、query 参数、埋点事件名，逐项与源页面对照，一个不落
@@ -23,8 +23,8 @@ metadata:
 **Input**: `/lc-seo-page-rewrite <route> [--until=<step>] [--auto] [pipeline 其余参数]`
 
 - `<route>`: kejinshou_m 中的路由路径（必填），如 `/intro/judicial`、`/intro/transfer`
-- 其余参数原样透传给 `/lc-feat:pipeline`（`--until=design` 白天只出设计、`--auto` 全自动等）
-- 功能名从路由取末段 kebab-case（`/intro/judicial` → `judicial-page`），流水线目录遵循 pipeline skill 的分支归档规则 `docs/pipeline/{branch-name}/{pipeline-name}/`
+- 其余参数原样透传给 `/fe-workflow`（`--until=design` 白天只出设计、`--auto` 全自动等）
+- 功能名从路由取末段 kebab-case（`/intro/judicial` → `judicial-page`），流水线目录遵循 fe-workflow 的分支归档规则 `docs/pipeline/{branch-name}/{pipeline-name}/`
 
 **Steps**
 
@@ -87,10 +87,10 @@ metadata:
 
 6. **接入流水线**
 
-   以上述探索产出为需求输入，执行 `/lc-feat:pipeline` 逻辑（透传用户参数）：
+   以上述探索产出为需求输入，执行 `/fe-workflow` 流水线逻辑（透传用户参数）：
    - spec「一、需求」必须包含：**功能对照清单**（源页面逐交互项 → 目标行为）、图片文案还原、案例/列表数据字段
    - spec「二、设计」必须包含：等价映射后的改动文件清单、图片素材清单（三分类）、TDK 设计、**部署切流注意事项**
-   - 编码阶段照常受 pipeline 阻断规则约束：**必须 Skill tool 调用 `lc-kejinshou-h5-nuxt`**
+   - 编码阶段照常受 fe-workflow 阻断规则约束：**必须 Skill tool 调用 `lc-kejinshou-h5-nuxt`**
    - E2E/验证阶段建议：本地页面截图与源页面线上截图并排对比（视觉一致性验收）
 
 7. **固定注意事项（每次都要写进 spec 的"注意事项"）**

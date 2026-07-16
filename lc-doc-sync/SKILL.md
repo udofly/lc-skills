@@ -1,6 +1,6 @@
 ---
 name: lc-doc-sync
-description: 文档时间同步技能。基于项目文档更新账本（updates.md）的 commit 锚点，把源码变更按时间/commit 粒度同步进项目文档：默认从上次同步点增量同步到 HEAD，--since 指定日期或 commit 起点，--scan 全局扫描过时文档，--check 只报告不修改。当用户说"同步文档"、"文档同步"、"文档过时了"、"扫描文档"、"检查文档新鲜度"、"按时间更新文档"、"补文档"时触发。与 lc-feat:document-release 共用账本与 frontmatter 时间戳约定，负责兜底捕捉绕过功能流水线的改动。
+description: 文档时间同步技能。基于项目文档更新账本（updates.md）的 commit 锚点，把源码变更按时间/commit 粒度同步进项目文档：默认从上次同步点增量同步到 HEAD，--since 指定日期或 commit 起点，--scan 全局扫描过时文档，--check 只报告不修改。当用户说"同步文档"、"文档同步"、"文档过时了"、"扫描文档"、"检查文档新鲜度"、"按时间更新文档"、"补文档"时触发。与 fe-workflow release 共用账本与 frontmatter 时间戳约定，负责兜底捕捉绕过功能流水线的改动。
 license: MIT
 metadata:
   author: kejinshou-team
@@ -10,7 +10,7 @@ metadata:
 
 # 文档时间同步（lc-doc-sync）
 
-按**时间/commit 粒度**兜底同步项目文档。`lc-feat:document-release` 在 PR 合并后按**功能粒度**精细更新本功能的文档，但 hotfix、重构、直接提交、他人合并的功能会绕过流水线——本技能负责把这些"漏网"变更对应的文档补齐。两者共写同一本更新账本、同一套 frontmatter 时间戳，互为补充而非替代。
+按**时间/commit 粒度**兜底同步项目文档。`fe-workflow release` 在 PR 合并后按**功能粒度**精细更新本功能的文档，但 hotfix、重构、直接提交、他人合并的功能会绕过流水线——本技能负责把这些"漏网"变更对应的文档补齐。两者共写同一本更新账本、同一套 frontmatter 时间戳，互为补充而非替代。
 
 ---
 
@@ -63,7 +63,7 @@ metadata:
 
 4. **幂等过滤**
 
-   对每篇目标文档读 frontmatter：`commit` 等于变更 commit 或是其后代（`git merge-base --is-ancestor <变更commit> <文档commit>` 为真）→ 该文档已被更新过（通常是 `lc-feat:document-release` 干的），跳过。这保证两个技能重叠运行不会重复劳动。
+   对每篇目标文档读 frontmatter：`commit` 等于变更 commit 或是其后代（`git merge-base --is-ancestor <变更commit> <文档commit>` 为真）→ 该文档已被更新过（通常是 `fe-workflow release` 干的），跳过。这保证两个技能重叠运行不会重复劳动。
 
    **文档无 frontmatter 戳时**（常见于建档基线未打戳）：回退为比较文档文件与源码文件各自的最后提交时间（`git log -1 --format=%ct -- <路径>`），文档不早于源码 → 跳过。与 `--scan` 的新鲜度回退是同一规则。
 

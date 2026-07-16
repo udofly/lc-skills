@@ -81,7 +81,7 @@ apiGiraffeCenterGoodsRecycleList({ page, pageSize }).then(({ status, message, da
 
 ## 接口未就绪时
 
-可先用 MOCK 数据占位（租号 `RentList`/`RentDetail` 即如此：接口函数已写好但注释、先渲染本地 mock），并在注释标明，联调时替换为真实 `apiXxx` 调用。如需对接 Apifox，可用配套技能 `lc-feat-api-sync`（可选，未安装则手动替换）。
+可先用 MOCK 数据占位（租号 `RentList`/`RentDetail` 即如此：接口函数已写好但注释、先渲染本地 mock），并在注释标明，联调时替换为真实 `apiXxx` 调用。如需对接 Apifox，可用 `fe-workflow api-sync`（可选，未安装则手动替换）。
 
 ## 写完自检
 

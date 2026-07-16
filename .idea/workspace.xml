@@ -5,57 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="329e5df7-a489-4fc6-97f4-79f3a86b4a8f" name="Changes" comment="feat(pipeline): 精简流水线步骤并新增文档同步技能&#10;&#10;- 将 design-review 合并到 design 步骤中，移除独立的设计审核步骤&#10;- 将 lint、test、qa 三个步骤合并为统一的 verify 步骤，输出综合验证报告&#10;- 主流程从 8 步精简为 5 步：requirement → design → implement → verify → e2e&#10;- 更新文档模板和交互提示以适配新的 5 步流程&#10;- 调整质量门控机制，在 verify 步骤内完成静态检查、单元测试和 QA 评分&#10;- 同步更新 pipeline-guide 和相关技能文档的步骤编号和说明&#10;- 新增 lc-doc-sync 文档时间同步技能，按 commit 粒度兜底同步遗漏变更&#10;- 实现多功能流水线支持，一个分支可包含多条流水线，每条流水线支持多个功能&#10;- 优化断点恢复机制，支持多功能看板选择和批量执行模式">
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/benchmark.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/benchmark.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/eval_metadata.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/outputs/evidence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/outputs/final_response.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/run-1/grading.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/with_skill/run-1/timing.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/outputs/evidence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/outputs/final_response.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/run-1/grading.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-list-current-branch/without_skill/run-1/timing.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/eval_metadata.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/outputs/evidence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/outputs/final_response.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/run-1/grading.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/with_skill/run-1/timing.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/outputs/evidence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/outputs/final_response.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/run-1/grading.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-resume-branch-mismatch/without_skill/run-1/timing.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/eval_metadata.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/outputs/20260714-160846-login-refactor.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/outputs/evidence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/outputs/final_response.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/run-1/grading.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/with_skill/run-1/timing.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/outputs/2026-07-14-登录重构.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/outputs/evidence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/outputs/final_response.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/run-1/grading.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint-workspace/iteration-1/eval-save-basic/without_skill/run-1/timing.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-checkpoint/evals/evals.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-skill-sync/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-skill-sync/SKILL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-skill-sync/scripts/sync.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lc-skill-sync/sync-map.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-branch-impact-analysis/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-branch-impact-analysis/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-branch-ui-fix/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-branch-ui-fix/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-commit-check/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-commit-check/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-commit-impact-analysis/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-commit-impact-analysis/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-html-css-seo-optimizer/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-html-css-seo-optimizer/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-doc-sync-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/lc-doc-sync-guide.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-feat-changelog.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-feat-coding-standard-loading.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-feat-e2e-guide.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/lc-feat-pipeline-guide.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-doc-sync/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-doc-sync/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-api-sync/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-design/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-document-release/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-e2e/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-implement/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-pipeline/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-pr/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-requirement/SKILL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-feat-verify/SKILL.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-nuxt/SKILL.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kejinshou-h5-vue/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-kr36-ui-guide/skill.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-kr36-ui-guide/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lc-mobile-pc-adaptive/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-mobile-pc-adaptive/SKILL.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-mp-taobao/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-mp-taobao/SKILL.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lc-seo-page-rewrite/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-seo-page-rewrite/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-skill-sync/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/lc-skill-sync/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lc-skill-sync/sync-map.conf" beforeDir="false" afterPath="$PROJECT_DIR$/lc-skill-sync/sync-map.conf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,6 +190,7 @@
       <workItem from="1783492052677" duration="2769000" />
       <workItem from="1783941421699" duration="107000" />
       <workItem from="1784101692119" duration="2145000" />
+      <workItem from="1784110166331" duration="4492000" />
     </task>
     <task id="LOCAL-00001" summary="chore: 初始化项目配置并添加性能基准测试技能&#10;&#10;- 添加 .idea 相关配置文件到 gitignore&#10;- 创建 modules.xml 和 skills.iml 配置文件&#10;- 添加 benchmark 性能基准测试技能文档和实现&#10;- 添加 browse 浏览器自动化技能文档和实现&#10;- 配置技能的 preamble 执行逻辑&#10;- 设置性能监控和基线比较功能&#10;- 实现页面加载时间、核心网络指标检测&#10;- 添加资源大小和请求数量分析功能">
       <option name="closed" value="true" />

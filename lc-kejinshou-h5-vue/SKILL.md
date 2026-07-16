@@ -756,7 +756,7 @@ sentryEmits(SENTRY_EVENT.KJS_UPLOAD, { detail: '上传失败', error });
 **核心约定**：
 
 - MCP 只负责"取真相 / 取设计 / 看线上"，产物必须按本规范二次落地，**禁止原样塞进代码**。
-- 接口同步流程：刷新并读取 OAS → 映射到 `MwpApi.ts` / `Mwp*.ts` → 替换 mock，映射不确定时用 `AskUserQuestion` 确认。配套技能 `lc-feat-api-sync` 可自动执行此流程（可选，未安装则按上述步骤手动同步）。
+- 接口同步流程：刷新并读取 OAS → 映射到 `MwpApi.ts` / `Mwp*.ts` → 替换 mock，映射不确定时用 `AskUserQuestion` 确认。配套工作流 `fe-workflow` 的 `api-sync` 子命令可自动执行此流程（可选，未安装则按上述步骤手动同步）。
 - **禁止**因 Apifox 是 REST 风格就绕过 `mwpRequest` 直接 `axios`/`fetch`；**禁止**把新接口加到遗留 `services/` 层。
 - 同步更新对应页面文档 `modules/<view目录>/<Page>.md` 的「接口依赖」表。
 
@@ -764,7 +764,7 @@ sentryEmits(SENTRY_EVENT.KJS_UPLOAD, { detail: '上传失败', error });
 
 ## 16. 文档维护约定（供文档同步类技能读取）
 
-> 本节是本项目**文档结构的单一事实源**。配套技能 `lc-feat-document-release`（发布后按功能粒度）与 `lc-doc-sync`（按时间/commit 粒度兜底）为**可选**——已安装则据本节自动增量更新文档，未安装则忽略技能名，人工维护文档时遵循同样结构即可；其它项目各自在自己的技能里声明同名章节。
+> 本节是本项目**文档结构的单一事实源**。配套工具 `fe-workflow release`（发布后按功能粒度）与 `lc-doc-sync`（按时间/commit 粒度兜底）为**可选**——已安装则据本节自动增量更新文档，未安装则忽略技能名，人工维护文档时遵循同样结构即可；其它项目各自在自己的技能里声明同名章节。
 
 | 项 | 值 |
 |----|----|
@@ -788,21 +788,21 @@ sentryEmits(SENTRY_EVENT.KJS_UPLOAD, { detail: '上传失败', error });
 
 > 正文出现尖括号占位（如 `<view目录>`、`<script setup>`）必须用反引号包成行内代码，否则 VitePress 把 Markdown 当 Vue 编译会失败。
 
-**更新账本与时间戳（`lc-doc-sync` / `lc-feat-document-release` 共用）**：
+**更新账本与时间戳（`lc-doc-sync` / `fe-workflow release` 共用）**：
 
 | 项 | 值 |
 |----|----|
 | 更新账本 | `docs/kejinshou-h5-vue/updates.md`：frontmatter `last_sync`（commit / date / by）为增量锚点 +「更新记录」表（新记录在最上） |
 | 记录行格式 | `日期 / 同步范围（起止 commit）/ 来源 / 更新文档 / 摘要` |
 | 文档时间戳 | 每篇被更新的页面/专题文档 frontmatter 打 `updated: YYYY-MM-DD` + `commit: <对齐的源码短 hash>` |
-| 锚点推进 | 仅 `lc-doc-sync` 完整同步到 HEAD 后推进 `last_sync`；`lc-feat-document-release` 只打戳 + 追加记录，**不动锚点**（它只覆盖本功能文档，同期可能还有其它未记账变更） |
+| 锚点推进 | 仅 `lc-doc-sync` 完整同步到 HEAD 后推进 `last_sync`；`fe-workflow release` 只打戳 + 追加记录，**不动锚点**（它只覆盖本功能文档，同期可能还有其它未记账变更） |
 | 幂等判断 | 目标文档 frontmatter `commit` 等于变更 commit 或是其后代（`git merge-base --is-ancestor <变更commit> <文档commit>` 为真）→ 视为已同步，跳过 |
 
-**临时文档区**：`docs/temp/` 存放临时生成的文档（分析报告、迁移映射、排查记录、草稿）。**不挂侧边栏、不入账本、不打戳、不进站点构建**（VitePress `srcExclude: temp/**`），内容不入库（gitignore，仅 README 入库）。`lc-feat-document-release` / `lc-doc-sync` 不得把正式文档写到此处；temp 中需要转正的文档按本节约定移入正式目录。
+**临时文档区**：`docs/temp/` 存放临时生成的文档（分析报告、迁移映射、排查记录、草稿）。**不挂侧边栏、不入账本、不打戳、不进站点构建**（VitePress `srcExclude: temp/**`），内容不入库（gitignore，仅 README 入库）。`fe-workflow release` / `lc-doc-sync` 不得把正式文档写到此处；temp 中需要转正的文档按本节约定移入正式目录。
 
 ## 17. 测试与验证约定（单元测试单一事实源）
 
-> 本节是本项目**单元测试约定的单一事实源**；文档站 `docs/kejinshou-h5-vue/testing.md` 是其镜像。配套技能 `lc-feat-verify`（可选）据此补/跑单测，未安装时手动执行 `npm run test:ci`。
+> 本节是本项目**单元测试约定的单一事实源**；文档站 `docs/kejinshou-h5-vue/testing.md` 是其镜像。配套工作流 `fe-workflow` 的 verify 步骤（可选）据此补/跑单测，未安装时手动执行 `npm run test:ci`。
 
 - **框架/环境**：Vitest + `happy-dom`，配置内联在 `vite.config.ts` 的 `test` 块（**无独立 `vitest.config.ts`**）；覆盖率 v8，`include: src/**`，`exclude: types/·constants/·mock/·*.d.ts`，并排除 `tests/e2e/**`。
 - **目录/命名**：测试在项目根 `test/`，文件名 `<被测模块>.test.ts`（如 `utils.test.ts`），相对路径引 `src/`。一个文件对应一个被测单元，禁止混塞无关模块。
